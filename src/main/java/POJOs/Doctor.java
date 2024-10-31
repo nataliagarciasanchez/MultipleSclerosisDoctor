@@ -10,33 +10,21 @@ import POJOs.User;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 
 /**
  *
  * @author nataliagarciasanchez
  */
-@Entity
-@Table (name= "doctors")
+
 public class Doctor implements Serializable{
     
     private static final long serialVersionUID = 1L;
     
-    @Id
-    @GeneratedValue (generator = "doctors")
-    @TableGenerator(name = "doctors", table = "sqlite_sequence",  pkColumnName = "name", valueColumnName = "seq", pkColumnValue = "doctors")
     private Integer id;
     private String name;
     private String specialty;
-    
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Patient> patients;
-    
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Feedback> feedback; 
     
     public Doctor(){
