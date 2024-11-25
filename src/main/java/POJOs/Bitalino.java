@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 
 public class Bitalino implements Serializable{
-     private static final long serialVersionUID = 123456789L;
+     private static final long serialVersionUID = 123456000L;
      
     private Integer id;
     private Date date;
