@@ -13,33 +13,41 @@ import java.util.Objects;
  * @author noeli
  */
 
-public class Bitalino implements Serializable{
-     private static final long serialVersionUID = 123456000L;
-     
+public class Bitalino implements Serializable {
+
+    private static final long serialVersionUID = 123456000L;
+
     private Integer id;
     private Date date;
     private SignalType signal_type;
-    private String file_path;
-    private Float duration;
+    private final Float duration = 60.0F;//seconds-> 1 min
     private Report report;
-     
-    public Bitalino(){
-    super();
-    }
-     
-    public Bitalino (Date date,SignalType signal_type,String file_path,Float duration){
-         this.date=date;
-         this.signal_type=signal_type;
-         this.file_path=file_path;
-         this.duration=duration;
-     }
 
-    public Bitalino(Integer id, Date date, SignalType signal_type, String file_path, Float duration, Report report) {
+    public Bitalino() {
+        super();
+    }
+
+    public Bitalino(Date date, SignalType signal_type) {
+        this.date = date;
+        this.signal_type = signal_type;
+    }
+
+    public Bitalino(Integer id, Date date, SignalType signal_type) {
         this.id = id;
         this.date = date;
         this.signal_type = signal_type;
-        this.file_path = file_path;
-        this.duration = duration;
+    }
+
+    public Bitalino(Integer id, Date date, SignalType signal_type, Report report) {
+        this.id = id;
+        this.date = date;
+        this.signal_type = signal_type;
+        this.report = report;
+    }
+
+    public Bitalino(Date date, SignalType signal_type, Report report) {
+        this.date = date;
+        this.signal_type = signal_type;
         this.report = report;
     }
 
@@ -57,10 +65,6 @@ public class Bitalino implements Serializable{
 
     public SignalType getSignal_type() {
         return signal_type;
-    }
-
-    public String getFile_path() {
-        return file_path;
     }
 
     public Float getDuration() {
@@ -83,21 +87,13 @@ public class Bitalino implements Serializable{
         this.signal_type = signal_type;
     }
 
-    public void setFile_path(String file_path) {
-        this.file_path = file_path;
-    }
-
-    public void setDuration(Float duration) {
-        this.duration = duration;
-    }
-
     public void setReport(Report report) {
         this.report = report;
     }
 
     @Override
     public String toString() {
-        return "Bitalino{" + "id=" + id + ", date=" + date + ", signal_type=" + signal_type + ", file_path=" + file_path + ", duration=" + duration + ", report=" + report + '}';
+        return "Bitalino{" + "id=" + id + ", date=" + date + ", signal_type=" + signal_type + ", duration=" + duration + ", report=" + report + '}';
     }
 
     @Override
@@ -106,7 +102,6 @@ public class Bitalino implements Serializable{
         hash = 79 * hash + Objects.hashCode(this.id);
         hash = 79 * hash + Objects.hashCode(this.date);
         hash = 79 * hash + Objects.hashCode(this.signal_type);
-        hash = 79 * hash + Objects.hashCode(this.file_path);
         hash = 79 * hash + Objects.hashCode(this.duration);
         hash = 79 * hash + Objects.hashCode(this.report);
         return hash;
@@ -127,9 +122,6 @@ public class Bitalino implements Serializable{
         if (!Objects.equals(this.signal_type, other.signal_type)) {
             return false;
         }
-        if (!Objects.equals(this.file_path, other.file_path)) {
-            return false;
-        }
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -141,10 +133,5 @@ public class Bitalino implements Serializable{
         }
         return Objects.equals(this.report, other.report);
     }
-     
-         
-     
-        }
 
-
-     
+}

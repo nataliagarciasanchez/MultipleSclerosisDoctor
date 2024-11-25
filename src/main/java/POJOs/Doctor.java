@@ -4,9 +4,6 @@
  */
 package POJOs;
 
-import POJOs.Feedback;
-import POJOs.Patient;
-import POJOs.User;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -18,11 +15,12 @@ import java.util.Objects;
 
 public class Doctor implements Serializable{
     
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID=1234567891011121314L;
     
     private Integer id;
     private String name;
-    private String specialty;
+    private String surname;
+    private final String specialty="NEUROLOGY";
     private User user;
     private List<Patient> patients;
     private List<Feedback> feedback; 
@@ -31,11 +29,15 @@ public class Doctor implements Serializable{
     super();
     }
 
-    public Doctor(String name, Integer id, String specialty, User user) {
+    public Doctor(String name, User user) {
+        
         this.name = name;
-        this.id = id;
-        this.specialty = specialty;
         this.user = user;
+    }
+    public Doctor(Integer id, String name, String surname){
+        this.id=id;
+        this.name=name;
+        this.surname=surname;
     }
 
     public static long getSerialVersionUID() {
@@ -54,6 +56,12 @@ public class Doctor implements Serializable{
         return specialty;
     }
 
+    public String getSurname() {
+        return surname;
+    }
+    
+    
+
     public User getUser() {
         return user;
     }
@@ -66,9 +74,6 @@ public class Doctor implements Serializable{
         this.id = id;
     }
 
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
 
     public void setUser(User user) {
         this.user = user;
