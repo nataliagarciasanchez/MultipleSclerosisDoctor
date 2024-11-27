@@ -39,6 +39,12 @@ public class Doctor implements Serializable{
         this.name=name;
         this.surname=surname;
     }
+    
+     public Doctor(String name, String surname){
+        this.name=name;
+        this.surname=surname;
+        
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
