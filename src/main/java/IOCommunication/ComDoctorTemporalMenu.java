@@ -34,7 +34,9 @@ public class ComDoctorTemporalMenu {
         //register();
         //login();
         //updateInfo();
-        //Function giving back feedback with diagnosis        
+        //Function giving back feedback with diagnosis 
+        //VIEW LIST OF PATIENTS
+        //VIEW PATIENT INFO --- 
     }
     
      public static void register() {
@@ -62,6 +64,9 @@ public class ComDoctorTemporalMenu {
         }
 
     }
+    //VIEW LIST OF PATIENTS
+    //VIEW PATIENT INFO --- 
+    //Laura
     
 }
 

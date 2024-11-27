@@ -134,6 +134,8 @@ public class DoctorServerCommunication {
 
         }
         
+        //public void viewPatient....
+        
         private static void releaseResources(ObjectInputStream in, ObjectOutputStream out, Socket socket) {
             try {
                 in.close();
