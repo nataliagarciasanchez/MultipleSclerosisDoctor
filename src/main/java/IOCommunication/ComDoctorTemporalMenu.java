@@ -31,7 +31,7 @@ public class ComDoctorTemporalMenu {
         //com.start();
         send= com.new Send();
         role=new Role();
-        //register();
+        register();
         //login();
         //updateInfo();
         //Function giving back feedback with diagnosis 
