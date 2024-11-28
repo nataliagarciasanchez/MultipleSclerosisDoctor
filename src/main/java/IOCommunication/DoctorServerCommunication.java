@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -138,8 +139,28 @@ public class DoctorServerCommunication {
             }
 
         }
+       
+        public void viewPatients(){
+        try {
+        // Send the request to the server
+        System.out.println("Requesting patient list...");
+        out.writeObject("viewPatients");
+        out.flush();
+        Object confirmation=in.readObject();
+        List<Patient> patients = (List<Patient>) confirmation; // Cast the object to List<Patient>
+        System.out.println("Patient list received:");
+            
+        // Iterate over all patients
+        for (Patient patient : patients) {
+        System.out.println(patient); // Assumes Patient class has a meaningful toString() implementation
+        } 
         
-        //public void viewPatient....
+        } catch (IOException | ClassNotFoundException ex) {
+         Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        }
         
         private static void releaseResources(ObjectInputStream in, ObjectOutputStream out, Socket socket) {
             try {
