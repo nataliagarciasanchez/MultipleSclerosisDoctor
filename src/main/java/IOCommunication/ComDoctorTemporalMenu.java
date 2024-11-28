@@ -3,17 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package IOCommunication;
-
 import Menu.Utilities.Utilities;
 import POJOs.Doctor;
-import POJOs.Gender;
-import POJOs.Patient;
 import POJOs.Role;
-import POJOs.SignalType;
 import POJOs.User;
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *

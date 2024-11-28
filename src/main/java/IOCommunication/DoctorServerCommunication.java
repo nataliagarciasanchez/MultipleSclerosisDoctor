@@ -27,36 +27,41 @@ public class DoctorServerCommunication {
     private Doctor doctor;
     
     public DoctorServerCommunication(String serverAddress, int serverPort){
+        this.serverAddress=serverAddress;
+        this.serverPort=serverPort;
         try {
-            this.serverAddress=serverAddress;
-            this.serverPort=serverPort;
-            this.socket=new Socket(serverAddress,serverPort);
-            System.out.println("Doctor connected to server");
             
+            this.socket=new Socket(serverAddress,serverPort);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            this.out.flush();
+            in = new ObjectInputStream(socket.getInputStream());
+            //el doctor debe poder recibir las señales del server mientras manda el feedback 
+            // Thread receiveThread=new Thread(new Receive());
+            //receiveThread.start();
         } catch (IOException ex) {
             Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }  
     }
     
-    public void start(){
+   /* public void start(){
         try {
             this.in=new ObjectInputStream(socket.getInputStream());
             this.out=new ObjectOutputStream(socket.getOutputStream());
-            
+            System.out.println("Doctor connected to server");
             
             new Thread(new Receive(in, out)).start();
         } catch (IOException ex) {
             Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
     
     class Send {
         
         /**
-         * Calls the server so the patient registers in the app and, therefore,
+         * Calls the server so the doctor registers in the app and, therefore,
          * it is saved in the database
          *
-         * @param patient
+         * @param doctor
          */
         public void register(Doctor doctor) {
             try {
@@ -77,7 +82,7 @@ public class DoctorServerCommunication {
 
         /**
          * Logs in the app with the username and password and accesses the info
-         * of that patient
+         * of that doctor
          *
          * @param username
          * @param password
@@ -99,7 +104,7 @@ public class DoctorServerCommunication {
         }
         
         /**
-         * Logs out of the app by closing all connections from that patient to the server
+         * Logs out of the app by closing all connections from that doctor to the server
          */
         public void logout(){
             try {
@@ -151,22 +156,27 @@ public class DoctorServerCommunication {
     class Receive implements Runnable {
 
         private ObjectInputStream in;
-        private ObjectOutputStream out;
+        private boolean running=true;
+       // private ObjectOutputStream out;
 
-        Receive(ObjectInputStream in, ObjectOutputStream out) {
+        public Receive(ObjectInputStream in) {
             this.in = in;
-            this.out=out;
+            
+        }
+        public void stop() {
+        running = false;
         }
 
         @Override
         public void run() {
             try {
-                while (true) {
+                while (running) {
                     // Read signals
                     //List <Frame> signals signals = (List<Frame>) in.readObject();
                     Patient patient=(Patient) in.readObject();
                     System.out.println("Processing signals and patient symptoms.....");
-                    
+                    handlePatientFromServer(patient);
+                    // handleSignalsFromServer(signals);
                     //Report report=calls the class that laura is doing
                     //out.writeObject(report);
                     
@@ -175,6 +185,16 @@ public class DoctorServerCommunication {
                 Logger.getLogger(Receive.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        private void handlePatientFromServer(Object message) {
+            // Process messages received from the server
+            System.out.println("Received from server: " + message);
+        }
+        private void handleSignalsFromServer(Object message) {
+            // Process messages received from the server
+            System.out.println("Received from server: " + message);
+        }
+        
     }
 
     
