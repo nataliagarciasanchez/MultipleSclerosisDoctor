@@ -28,9 +28,10 @@ public class ComDoctorTemporalMenu {
         register();
         //login();
         //updateInfo();
+        //viewPersonalInfo();
         //Function giving back feedback with diagnosis 
         //VIEW LIST OF PATIENTS
-        //VIEW PATIENT INFO --- 
+        
     }
     
      public static void register() {
@@ -57,6 +58,11 @@ public class ComDoctorTemporalMenu {
             send.updateInformation(user);
         }
 
+    }
+    
+    public static void viewPersonalInfo(){
+        Doctor doctor = send.login("noelia@gmail.com", "Password123");
+        System.out.println(doctor);
     }
     //VIEW LIST OF PATIENTS
     //VIEW PATIENT INFO --- 
