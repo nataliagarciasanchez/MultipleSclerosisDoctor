@@ -42,21 +42,25 @@ public class ProcessReport {
 
         // Define ranges based on signal type and gender
         float minRange, maxRange;
-        if (signalType == SignalType.EMG) {
-            minRange = EMG_MIN;
-            maxRange = EMG_MAX;
-        } else if (signalType == SignalType.ECG) {
-            if (gender == Gender.MALE) {
-                minRange = ECG_MIN_MALE;
-                maxRange = ECG_MAX_MALE;
-            } else if (gender == Gender.FEMALE) {
-                minRange = ECG_MIN_FEMALE;
-                maxRange = ECG_MAX_FEMALE;
-            } else {
-                return "Unsupported or unspecified gender.";
-            }
-        } else {
+        if (null == signalType) {
             return "Unsupported signal type.";
+        } else switch (signalType) {
+            case EMG:
+                minRange = EMG_MIN;
+                maxRange = EMG_MAX;
+                break;
+            case ECG:
+                if (gender == Gender.MALE) {
+                    minRange = ECG_MIN_MALE;
+                    maxRange = ECG_MAX_MALE;
+                } else if (gender == Gender.FEMALE) {
+                    minRange = ECG_MIN_FEMALE;
+                    maxRange = ECG_MAX_FEMALE;
+                } else {
+                    return "Unsupported or unspecified gender.";
+                }   break;
+            default:
+                return "Unsupported signal type.";
         }
 
         // Analyze the signal values
