@@ -44,17 +44,28 @@ public class DoctorServerCommunication {
         }  
     }
     
-   /* public void start(){
-        try {
+    public void start(){
+        /*try {
             this.in=new ObjectInputStream(socket.getInputStream());
             this.out=new ObjectOutputStream(socket.getOutputStream());
             System.out.println("Doctor connected to server");
             
-            new Thread(new Receive(in, out)).start();
+            //new Thread(new Receive(in, out)).start();
+        } catch (IOException ex) {
+            Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        try {
+            this.socket = new Socket(serverAddress, serverPort);
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+            this.in = new ObjectInputStream(socket.getInputStream());
+            System.out.println("DoctorServerCommunication - Doctor connected to server");
+            //new Thread(new Receive(in)).start();
         } catch (IOException ex) {
             Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+    }
     
     class Send {
         
@@ -140,13 +151,19 @@ public class DoctorServerCommunication {
 
         }
        
-        public void viewPatients() {
+        public List <Patient> viewPatients() {
+            List <Patient> patients = null;
             try {
                 // Send the request to the server
                 System.out.println("Requesting patient list...");
                 out.writeObject("viewPatients");
                 out.flush();
-                List<Patient> patients = (List<Patient>) in.readObject();
+                System.out.println("viewPatientsRequest sent");
+                
+                out.writeObject(doctor);
+                out.flush();
+                
+                patients = (List<Patient>) in.readObject();
                 System.out.println("Patient list received:");
 
                 // Iterate over all patients
@@ -158,6 +175,7 @@ public class DoctorServerCommunication {
                 Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+        return patients;
         }
         
         private static void releaseResources(ObjectInputStream in, ObjectOutputStream out, Socket socket) {

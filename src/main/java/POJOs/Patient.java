@@ -16,13 +16,13 @@ import java.util.Objects;
 
 public class Patient implements Serializable{
     
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8419572012345678901L;
     private Integer id;
     private User user;
     private String name;
     private Date dob;
     private Gender gender;
-    private Integer phone;
+    private String phone;
     private Doctor doctor;
     private List<Report> reports;
    
@@ -31,7 +31,7 @@ public class Patient implements Serializable{
         super();
     }
 
-    public Patient(Integer id, String name, Date dob, Gender gender, Integer phone, Doctor doctor, List<Report> reports) {
+    public Patient(Integer id, String name, Date dob, Gender gender, String phone, Doctor doctor, List<Report> reports) {
         this.id = id;
         this.name = name;
         this.dob = dob;
@@ -61,7 +61,7 @@ public class Patient implements Serializable{
         return gender;
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
@@ -89,7 +89,7 @@ public class Patient implements Serializable{
         this.gender = gender;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
