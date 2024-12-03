@@ -73,6 +73,10 @@ public class DoctorServerCommunicationTest {
         
         
     }
+    
+    public static void checkReports(){
+        
+    }
     //VIEW LIST OF PATIENTS
     //VIEW PATIENT INFO --- 
     //Laura
