@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -155,5 +157,26 @@ public class Utilities {
         
         // Convertir java.util.Date a java.sql.Date
         return new java.sql.Date(utilDate.getTime());
+    }
+    
+    
+    public static List<Integer> splitStringToIntList(String input) {
+        List<Integer> numbers = new ArrayList<>();
+
+        if (input != null && !input.isEmpty()) {
+            String[] lines = input.split("\n"); 
+
+            for (String line : lines) {
+                try {
+                    
+                    int number = Integer.parseInt(line.trim());
+                    numbers.add(number);
+                } catch (NumberFormatException e) {
+                    System.out.println("No se pudo convertir: " + line);
+                }
+            }
+        }
+
+        return numbers;
     }
 }

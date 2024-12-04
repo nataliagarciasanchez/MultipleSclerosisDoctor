@@ -31,6 +31,13 @@ public class Feedback {
         this.doctor = doctor;
         this.patient = patient;
     }
+    public Feedback(String message, Date date, Doctor doctor, Patient patient) {
+        
+        this.message = message;
+        this.date = date;
+        this.doctor = doctor;
+        this.patient = patient;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

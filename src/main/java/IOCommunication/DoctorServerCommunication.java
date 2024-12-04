@@ -3,13 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package IOCommunication;
+import Menu.Utilities.Utilities;
+import POJOs.Bitalino;
 import POJOs.Doctor;
+import POJOs.Feedback;
 import POJOs.Patient;
+import POJOs.Report;
 import POJOs.User;
+import Report.ProcessReport;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +43,7 @@ public class DoctorServerCommunication {
             this.out.flush();
             in = new ObjectInputStream(socket.getInputStream());
             //el doctor debe poder recibir las señales del server mientras manda el feedback 
-            // Thread receiveThread=new Thread(new Receive());
+            // Thread receiveThread=new Thread(new Receive(in));
             //receiveThread.start();
         } catch (IOException ex) {
             Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
@@ -45,15 +51,6 @@ public class DoctorServerCommunication {
     }
     
     public void start(){
-        /*try {
-            this.in=new ObjectInputStream(socket.getInputStream());
-            this.out=new ObjectOutputStream(socket.getOutputStream());
-            System.out.println("Doctor connected to server");
-            
-            //new Thread(new Receive(in, out)).start();
-        } catch (IOException ex) {
-            Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         
         try {
             this.socket = new Socket(serverAddress, serverPort);
@@ -150,7 +147,11 @@ public class DoctorServerCommunication {
             }
 
         }
-       
+        
+        /**
+         * Shows list of patients the doctor has assigned
+         * @return list of patients
+         */
         public List <Patient> viewPatients() {
             List <Patient> patients = null;
             try {
@@ -178,6 +179,17 @@ public class DoctorServerCommunication {
         return patients;
         }
         
+        public void sendFeedback2Server(Feedback feedback){
+            try {
+                out.writeObject("sendFeedback");
+                out.writeObject(feedback);
+                out.flush();
+                System.out.println(in.readObject());//response fromServer
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
         private static void releaseResources(ObjectInputStream in, ObjectOutputStream out, Socket socket) {
             try {
                 in.close();
@@ -194,11 +206,11 @@ public class DoctorServerCommunication {
 
         private ObjectInputStream in;
         private boolean running=true;
-       // private ObjectOutputStream out;
+        private String message;
 
-        public Receive(ObjectInputStream in) {
+        public Receive(ObjectInputStream in, String message) {
             this.in = in;
-            
+            this.message=message;
         }
         public void stop() {
         running = false;
@@ -206,31 +218,34 @@ public class DoctorServerCommunication {
 
         @Override
         public void run() {
-            try {
-                while (running) {
-                    // Read signals
-                    //List <Frame> signals signals = (List<Frame>) in.readObject();
-                    Patient patient=(Patient) in.readObject();
-                    System.out.println("Processing signals and patient symptoms.....");
-                    handlePatientFromServer(patient);
-                    // handleSignalsFromServer(signals);
-                    //Report report=calls the class that laura is doing
-                    //out.writeObject(report);
-                    
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(Receive.class.getName()).log(Level.SEVERE, null, ex);
+            while (running) {
+                receiveReportFromServer();
             }
         }
         
-        private void handlePatientFromServer(Object message) {
-            // Process messages received from the server
-            System.out.println("Received from server: " + message);
+        private void receiveReportFromServer(){
+            try {
+                Patient patient=(Patient) in.readObject();
+                Report report =(Report) in.readObject();
+                Bitalino bitalino_EMG=report.getBitalinos().get(0);
+                ProcessReport.analyzeSignalsReport(report, patient, bitalino_EMG);
+                Bitalino bitalino_ECG=report.getBitalinos().get(1);
+                ProcessReport.analyzeSignalsReport(report, patient, bitalino_ECG);
+                java.sql.Date date=report.getDate();
+                
+                Feedback feedback=new Feedback(message,date,report.getPatient().getDoctor(),report.getPatient());
+                sendFeedback2Server(message);
+                
+                
+                System.out.println("Processing signals and patient symptoms.....");
+            } catch (IOException ex) {
+                Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        private void handleSignalsFromServer(Object message) {
-            // Process messages received from the server
-            System.out.println("Received from server: " + message);
-        }
+        
+        
         
     }
 

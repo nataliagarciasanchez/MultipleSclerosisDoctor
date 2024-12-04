@@ -69,6 +69,11 @@ public class Bitalino implements Serializable {
         return id;
     }
 
+    public String getSignalValues() {
+        return signalValues;
+    }
+    
+
     public Date getDate() {
         return date;
     }

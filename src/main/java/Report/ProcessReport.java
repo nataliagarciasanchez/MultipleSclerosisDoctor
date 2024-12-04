@@ -4,7 +4,11 @@
  */
 package Report;
 
+import Menu.Utilities.Utilities;
+import POJOs.Bitalino;
 import POJOs.Gender;
+import POJOs.Patient;
+import POJOs.Report;
 import POJOs.SignalType;
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +33,15 @@ public class ProcessReport {
      * Analyzes a list of signal values for a given signal type and determines if they are normal or abnormal,
      * considering gender-specific ranges for ECG.
      *
-     * @param signalType the type of signal (e.g., EMG or ECG)
-     * @param signalValues the list of signal values to process
-     * @param gender the gender of the patient (Male or Female)
+     * @param report
+     * @param patient
+     * @param bitalino
      * @return a string indicating whether the signals are normal or abnormal
      */
-    public static String analyzeSignals(SignalType signalType, List<Float> signalValues, Gender gender) {
+    public static String analyzeSignalsReport(Report report, Patient patient, Bitalino bitalino) {
+        SignalType signalType=bitalino.getSignal_type();
+        Gender gender=patient.getGender();
+        String signalValues=bitalino.getSignalValues();
         // Validate input
         if (signalValues == null || signalValues.isEmpty()) {
             return "No signal data available.";
@@ -64,28 +71,29 @@ public class ProcessReport {
         }
 
         // Analyze the signal values
-        boolean isNormal = signalValues.stream()
+        List<Integer> signalValuesList=Utilities.splitStringToIntList(signalValues);
+        boolean isNormal = signalValuesList.stream()
                 .allMatch(value -> value >= minRange && value <= maxRange);
 
         return isNormal ? "All signals are within the normal range."
                         : "Some signals are outside the normal range.";
     }
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         // Example usage
         List<Float> emgValues = Arrays.asList(1.2f, 2.3f, 4.0f);
         List<Float> ecgValues = Arrays.asList(2.0f, 3.2f, 3.4f);
 
         // Analyze EMG signals
-        String emgResult = ProcessReport.analyzeSignals(SignalType.EMG, emgValues, Gender.MALE);
+        String emgResult = ProcessReport.analyzeSignalsReport(SignalType.EMG, emgValues, Gender.MALE);
         System.out.println(emgResult);
 
         // Analyze ECG signals for Male
-        String ecgResultMale = ProcessReport.analyzeSignals(SignalType.ECG, ecgValues, Gender.MALE);
+        String ecgResultMale = ProcessReport.analyzeSignalsReport(SignalType.ECG, ecgValues, Gender.MALE);
         System.out.println(ecgResultMale);
 
         // Analyze ECG signals for Female
-        String ecgResultFemale = ProcessReport.analyzeSignals(SignalType.ECG, ecgValues, Gender.FEMALE);
+        String ecgResultFemale = ProcessReport.analyzeSignalsReport(SignalType.ECG, ecgValues, Gender.FEMALE);
         System.out.println(ecgResultFemale);
-    }
+    }*/
 }

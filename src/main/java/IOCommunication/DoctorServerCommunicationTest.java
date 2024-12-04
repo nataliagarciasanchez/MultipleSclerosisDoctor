@@ -19,6 +19,7 @@ public class DoctorServerCommunicationTest {
     
     public static DoctorServerCommunication com; 
     public static DoctorServerCommunication.Send send;
+    public static DoctorServerCommunication.Receive receive;
     public static String macAddress = "98:D3:41:FD:4E:E8";
     public static Role role;
     
