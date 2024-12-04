@@ -4,10 +4,16 @@
  */
 package IOCommunication;
 import Menu.Utilities.Utilities;
+import POJOs.Bitalino;
 import POJOs.Doctor;
+import POJOs.Feedback;
 import POJOs.Patient;
+import POJOs.Report;
 import POJOs.Role;
 import POJOs.User;
+import Report.ProcessReport;
+import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -19,7 +25,6 @@ public class DoctorServerCommunicationTest {
     
     public static DoctorServerCommunication com; 
     public static DoctorServerCommunication.Send send;
-    public static DoctorServerCommunication.Receive receive;
     public static String macAddress = "98:D3:41:FD:4E:E8";
     public static Role role;
     
@@ -32,24 +37,24 @@ public class DoctorServerCommunicationTest {
         //login();
         //updateInfo();
         //viewPersonalInfo();
-        //Function giving back feedback with diagnosis 
         viewPatients();
-        
+        //checkReports
     }
     
-     public static void register() {
-         Doctor noelia =new Doctor("Dr.Noelia","Auba");
-         User user=new User("drauba@gmail.com", "Password123", role);
-         noelia.setUser(user);
-         send.register(noelia);
-     }
-     public static void login(){
-       Doctor doctor=send.login("drauba@gmail.com", "Password123");
-       System.out.println(doctor);
+    public static void register() {
+        Doctor noelia = new Doctor("Dr.Noelia", "Auba");
+        User user = new User("drauba@gmail.com", "Password123", role);
+        noelia.setUser(user);
+        send.register(noelia);
     }
-    
+
+    public static void login() {
+        Doctor doctor = send.login("drauba@gmail.com", "Password123");
+        System.out.println(doctor);
+    }
+
     public static void updateInfo() {
-        Doctor doctor=send.login("drauba@gmail.com", "Password123");
+        Doctor doctor = send.login("drauba@gmail.com", "Password123");
         System.out.println(doctor);
         User user = doctor.getUser();
         user.setRole(role);
@@ -62,25 +67,72 @@ public class DoctorServerCommunicationTest {
         }
 
     }
-    
-    public static void viewPersonalInfo(){
-        Doctor doctor = send.login("noelia@gmail.com", "Password123");
+
+    public static void viewPersonalInfo() {
+        Doctor doctor = send.login("doctor.garcia@multipleSclerosis.com", "Password456");
         System.out.println(doctor);
     }
-    
-    public static void viewPatients(){
+
+    public static void viewPatients() {
         Doctor doctor = send.login("doctor.garcia@multipleSclerosis.com", "Password456");
-        send.viewPatients();
-        
-        
+        List<Patient> patients = send.viewPatients(doctor);
+        Iterator<Patient> it = patients.listIterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+
+    }
+
+    //SAME AS VIEWPATIENTS BUT SHOWS ALL REPORTS FROM PATIENTS 
+    public static void checkReports() {
+        Doctor doctor = send.login("doctor.garcia@multipleSclerosis.com", "Password456");
+        List<Patient> patients = send.viewPatients(doctor);
+        Iterator<Patient> it1 = patients.listIterator();
+        List<Report> reports = null;
+
+        Report report = null;
+        while (it1.hasNext()) {
+            reports = it1.next().getReports();
+        }
+        Iterator<Report> it2 = reports.listIterator();
+        System.out.println("This is the list of all the reports the patients from this doctor: ");
+        while (it2.hasNext()) {
+            System.out.println(it2.next());
+        }
+        System.out.println("This is the list of the reports the doctor has received that day: ");
+        while (it2.hasNext()) {
+            report = it2.next();
+            LocalDate date = it2.next().getDate().toLocalDate();
+            if (isReportFromToday(date)) {
+                System.out.println(report);
+            }
+        }
+        //en el report que seleccione deberá aparece un espacio para escribir el feedback y mandarlo
+        //devuelve el report seleccionado y se lo manda a sendFeedback
+        sendFeedback2Server(report);
     }
     
-    public static void checkReports(){
-        
+    
+    public static boolean isReportFromToday(LocalDate report_date){
+        LocalDate todays_date=LocalDate.now();
+        return report_date.equals(todays_date);
     }
-    //VIEW LIST OF PATIENTS
-    //VIEW PATIENT INFO --- 
-    //Laura
+    
+    public static void sendFeedback2Server(Report report){
+        
+        Doctor doctor = send.login("doctor.garcia@multipleSclerosis.com", "Password456");
+        Patient patient=report.getPatient();
+        Bitalino bitalino_EMG=report.getBitalinos().get(0);
+        Bitalino bitalino_ECG=report.getBitalinos().get(1);
+        //before creating the feedback-> the signals from the patient are processed so the 
+        //doctor knows if the parameters are abnormal and takes it into account in the feedback
+        ProcessReport.analyzeSignalsReport(report, patient, bitalino_EMG);
+        ProcessReport.analyzeSignalsReport(report, patient, bitalino_ECG);
+        
+        String message="This is the feedback message of the test";
+        Feedback feedback=new Feedback(message,report.getDate(),doctor,patient);
+        send.sendFeedback2Server(feedback);
+    }
     
 }
 

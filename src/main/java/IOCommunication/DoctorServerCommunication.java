@@ -152,7 +152,7 @@ public class DoctorServerCommunication {
          * Shows list of patients the doctor has assigned
          * @return list of patients
          */
-        public List <Patient> viewPatients() {
+        public List <Patient> viewPatients(Doctor doctor) {
             List <Patient> patients = null;
             try {
                 // Send the request to the server
@@ -202,52 +202,7 @@ public class DoctorServerCommunication {
         
     }
     
-    class Receive implements Runnable {
-
-        private ObjectInputStream in;
-        private boolean running=true;
-        private String message;
-
-        public Receive(ObjectInputStream in, String message) {
-            this.in = in;
-            this.message=message;
-        }
-        public void stop() {
-        running = false;
-        }
-
-        @Override
-        public void run() {
-            while (running) {
-                receiveReportFromServer();
-            }
-        }
-        
-        private void receiveReportFromServer(){
-            try {
-                Patient patient=(Patient) in.readObject();
-                Report report =(Report) in.readObject();
-                Bitalino bitalino_EMG=report.getBitalinos().get(0);
-                ProcessReport.analyzeSignalsReport(report, patient, bitalino_EMG);
-                Bitalino bitalino_ECG=report.getBitalinos().get(1);
-                ProcessReport.analyzeSignalsReport(report, patient, bitalino_ECG);
-                java.sql.Date date=report.getDate();
-                
-                Feedback feedback=new Feedback(message,date,report.getPatient().getDoctor(),report.getPatient());
-                sendFeedback2Server(message);
-                
-                
-                System.out.println("Processing signals and patient symptoms.....");
-            } catch (IOException ex) {
-                Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        
-        
-    }
+    
 
     
 }
