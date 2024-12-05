@@ -37,7 +37,7 @@ public class DoctorServerCommunication {
     public DoctorServerCommunication(String serverAddress, int serverPort){
         this.serverAddress=serverAddress;
         this.serverPort=serverPort;
-            }
+    }
     
     public void start(){
         
