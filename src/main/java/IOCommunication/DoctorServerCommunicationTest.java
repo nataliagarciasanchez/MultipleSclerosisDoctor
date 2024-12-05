@@ -34,7 +34,7 @@ public class DoctorServerCommunicationTest {
         send= com.new Send();
         role=new Role();
         register();
-        //login();
+        login();
         //updateInfo();
         //viewPersonalInfo();
         //viewPatients();
@@ -49,12 +49,14 @@ public class DoctorServerCommunicationTest {
     }
 
     public static void login() {
-        Doctor doctor = send.login("drauba@gmail.com", "Password123");
+        Doctor doctor = send.login("drProbando@gmail.com", "Password123");
+        doctor.getUser().setRole(role);
         System.out.println(doctor);
     }
 
     public static void updateInfo() {
         Doctor doctor1 = send.login("drProbando@gmail.com", "Password123");
+        doctor1.getUser().setRole(role);
         System.out.println(doctor1);
         User user = doctor1.getUser();
         user.setRole(role);
@@ -66,16 +68,19 @@ public class DoctorServerCommunicationTest {
             send.updateInformation(user);
         }
         Doctor doctor2 = send.login("drProbando@gmail.com", newPass);
+        doctor2.getUser().setRole(role);
 
     }
 
     public static void viewPersonalInfo() {
         Doctor doctor = send.login("doctor.garcia@multipleSclerosis.com", "Password456");
+        doctor.getUser().setRole(role);
         System.out.println(doctor);
     }
 
     public static void viewPatients() {
         Doctor doctor = send.login("doctor.garcia@multipleSclerosis.com", "Password456");
+        doctor.getUser().setRole(role);
         List<Patient> patients = send.viewPatients(doctor);
         Iterator<Patient> it = patients.listIterator();
         while (it.hasNext()) {

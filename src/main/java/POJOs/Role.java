@@ -20,7 +20,7 @@ public class Role implements Serializable{
 
     public Role() {
         super();
-        this.id=1;
+        this.id=2;
         this.name = "doctor";
     
     }
