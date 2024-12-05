@@ -33,11 +33,11 @@ public class DoctorServerCommunicationTest {
         com.start();
         send= com.new Send();
         role=new Role();
-        //register();
+        register();
         //login();
         //updateInfo();
         //viewPersonalInfo();
-        viewPatients();
+        //viewPatients();
         //checkReports
     }
     
