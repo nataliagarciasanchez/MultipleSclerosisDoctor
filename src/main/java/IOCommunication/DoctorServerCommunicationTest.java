@@ -43,7 +43,7 @@ public class DoctorServerCommunicationTest {
     
     public static void register() {
         Doctor noelia = new Doctor("Dr.Noelia", "Auba");
-        User user = new User("drauba@gmail.com", "Password123", role);
+        User user = new User("drProbando@gmail.com", "Password123", role);
         noelia.setUser(user);
         send.register(noelia);
     }
@@ -54,17 +54,18 @@ public class DoctorServerCommunicationTest {
     }
 
     public static void updateInfo() {
-        Doctor doctor = send.login("drauba@gmail.com", "Password123");
-        System.out.println(doctor);
-        User user = doctor.getUser();
+        Doctor doctor1 = send.login("drProbando@gmail.com", "Password123");
+        System.out.println(doctor1);
+        User user = doctor1.getUser();
         user.setRole(role);
         System.out.println("user\n" + user);
         String newPass = "Password456";
         if (Utilities.isValidPassword(newPass)) {
-            user.setPassword("Password456");
+            user.setPassword(newPass);
             System.out.println("This is to check if the setter is working correctly: " + user.getPassword());
             send.updateInformation(user);
         }
+        Doctor doctor2 = send.login("drProbando@gmail.com", newPass);
 
     }
 

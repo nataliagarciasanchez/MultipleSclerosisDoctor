@@ -11,6 +11,7 @@ import POJOs.Patient;
 import POJOs.Report;
 import POJOs.User;
 import Report.ProcessReport;
+import Security.PasswordEncryption;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -64,7 +65,7 @@ public class DoctorServerCommunication {
         }
     }
     
-    class Send {
+    public class Send {
         
         /**
          * Calls the server so the doctor registers in the app and, therefore,
@@ -75,14 +76,25 @@ public class DoctorServerCommunication {
         public void register(Doctor doctor) {
             try {
                 out.writeObject("register"); // Acción de registro
+                out.flush();
+                
+                //TODO quitar souts
+                System.out.println("Plain: " + doctor.getUser().getPassword()); // para comprobar si el hash se hace bien
+                String hashedPassword = PasswordEncryption.hashPassword(doctor.getUser().getPassword()); 
+                doctor.getUser().setPassword(hashedPassword); // para comprobar si el hash se hace bien
+                System.out.println("Hashed: " + doctor.getUser().getPassword());
+                
                 out.writeObject(doctor.getUser());//envía los datos de registro al server
                 out.writeObject(doctor);
-                
                 out.flush();
+                
                 System.out.println("Registering.....");
                 String confirmation=(String) in.readObject();
-                System.out.println(confirmation);//muestra la confirmación del server de que se ha registrado
-                
+                if (confirmation.contains("Username already in use") ){
+                   System.out.println("Error: " + confirmation); 
+                }else{
+                    System.out.println(confirmation);//muestra la confirmación del server de que se ha registrado
+                }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -102,9 +114,21 @@ public class DoctorServerCommunication {
             try {
                 out.writeObject("login"); // Acción de inicio de sesión
                 out.writeObject(username);
+                
+                System.out.println("Plain: " + password);
+                password = PasswordEncryption.hashPassword(password); // encriptamos
+                System.out.println("Hashed: "+ password);
                 out.writeObject(password);
+                
                 System.out.println("Logging in.....");
-                doctor= (Doctor) in.readObject();
+                Object response=in.readObject();
+                if(response instanceof Doctor){//si es de tipo patient es que las credenciales son correctas
+                   doctor = (Doctor) response;
+                   System.out.println("Successfull log in!");
+                }else if (response instanceof String){
+                   String errorMessage = (String) response; // Mensaje de error
+                   System.out.println("Error: " + errorMessage); 
+                }
   
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
@@ -133,10 +157,16 @@ public class DoctorServerCommunication {
          *
          * @param user
          */
-        public void updateInformation(User user) {
+        public void updateInformation(User user) { //TODO could receive also a doctor object to change that info
 
             try {
                 out.writeObject("updateInformation");
+                
+                System.out.println("Plain: " + doctor.getUser().getPassword()); // para comprobar si el hash se hace bien
+                String hashedPassword = PasswordEncryption.hashPassword(doctor.getUser().getPassword()); 
+                doctor.getUser().setPassword(hashedPassword); 
+                System.out.println("Hashed: " + doctor.getUser().getPassword());// para comprobar si el hash se hace bien
+                
                 out.writeObject(user);
                 System.out.println(in.readObject());
                 
