@@ -37,19 +37,7 @@ public class DoctorServerCommunication {
     public DoctorServerCommunication(String serverAddress, int serverPort){
         this.serverAddress=serverAddress;
         this.serverPort=serverPort;
-        try {
-            
-            this.socket=new Socket(serverAddress,serverPort);
-            out = new ObjectOutputStream(socket.getOutputStream());
-            this.out.flush();
-            in = new ObjectInputStream(socket.getInputStream());
-            //el doctor debe poder recibir las señales del server mientras manda el feedback 
-            // Thread receiveThread=new Thread(new Receive(in));
-            //receiveThread.start();
-        } catch (IOException ex) {
-            Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }  
-    }
+            }
     
     public void start(){
         
