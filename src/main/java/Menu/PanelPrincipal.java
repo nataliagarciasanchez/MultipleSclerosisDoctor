@@ -112,7 +112,7 @@ public class PanelPrincipal extends JPanel {
         okButton.addActionListener(e -> {
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
-
+           
             if (username.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -123,13 +123,14 @@ public class PanelPrincipal extends JPanel {
                 Doctor doctor = null;
                 while (doctor == null) {
                     doctor = send.login(username, password); // Communicate with server  
+                    
                     if (doctor != null) {
                         JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-                        // Proceed to the next panel with patient details
+                        // Proceed to the next panel with doctor details
                         JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
                         mainFrame.getContentPane().removeAll();
-                        mainFrame.add(new SecondPanel(doctor, send)); // Pass patient details to the next panel
+                        mainFrame.add(new SecondPanel(doctor, send)); // Pass doctor details to the next panel
                         mainFrame.revalidate();
                         mainFrame.repaint();
                         break;
