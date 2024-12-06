@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
  *
  * @author nataliagarciasanchez
  */
-public class PatientTempCommuUI {
+public class DoctorTempCommuUI {
     
     public static void main(String[] args) {
         try {
