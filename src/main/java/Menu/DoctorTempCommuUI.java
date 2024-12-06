@@ -18,7 +18,7 @@ public class DoctorTempCommuUI {
         try {
             // Configuración predeterminada del servidor (localhost y puerto 9000)
             String serverAddress = "127.0.0.1"; // Localhost
-            int port = 9000; // Puerto predeterminado
+            int port = 9001; // Puerto predeterminado
 
             // Inicializar la conexión al servidor
             DoctorServerCommunication doctorServerCom = new DoctorServerCommunication(serverAddress, port);
