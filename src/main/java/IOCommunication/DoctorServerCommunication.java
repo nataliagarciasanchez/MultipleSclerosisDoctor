@@ -144,26 +144,29 @@ public class DoctorServerCommunication {
          * Changes the current password of the patient
          *
          * @param user
+         * @param doctor
          */
-        public void updateInformation(User user) { //TODO could receive also a doctor object to change that info
+        public void updateInformation(User user, Doctor doctor) { 
 
             try {
                 out.writeObject("updateInformation");
+                System.out.println("Updating info");
+                System.out.println("user.getPassword(): " + user.getPassword()); //deberia ser nueva contraseña plana
+                System.out.println("doctor.getUser().getPassword(): : " + doctor.getUser().getPassword()); //contraseña antigua encriptada
+                String hashedPassword = PasswordEncryption.hashPassword(user.getPassword()); 
                 
-                System.out.println("Plain: " + doctor.getUser().getPassword()); // para comprobar si el hash se hace bien
-                String hashedPassword = PasswordEncryption.hashPassword(doctor.getUser().getPassword()); 
-                doctor.getUser().setPassword(hashedPassword); 
-                System.out.println("Hashed: " + doctor.getUser().getPassword());// para comprobar si el hash se hace bien
+                if (!doctor.getUser().getPassword().equals(hashedPassword)){ // comprobamos encriptadas para ver si la contraseña ha cambiado
+                    doctor.getUser().setPassword(hashedPassword); 
+                    System.out.println("Hashed patient.getUser().getPassword(): " + doctor.getUser().getPassword());// para comprobar si el hash se hace bien
                 
+                }
                 out.writeObject(user);
+                out.writeObject(doctor);
                 System.out.println(in.readObject());
                 
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
-                releaseResources(in,out,socket);//TODO quitar el cerrar, solo para la prueba
             }
-
         }
         
         /**

@@ -56,7 +56,6 @@ public class DoctorServerCommunicationTest {
 
     public static void updateInfo() {
         Doctor doctor1 = send.login("drProbando@gmail.com", "Password123");
-        doctor1.getUser().setRole(role);
         System.out.println(doctor1);
         User user = doctor1.getUser();
         user.setRole(role);
@@ -64,8 +63,10 @@ public class DoctorServerCommunicationTest {
         String newPass = "Password456";
         if (Utilities.isValidPassword(newPass)) {
             user.setPassword(newPass);
+            String new_name="Josefina";
+            doctor1.setName(new_name);
             System.out.println("This is to check if the setter is working correctly: " + user.getPassword());
-            send.updateInformation(user);
+            send.updateInformation(user, doctor1);
         }
         Doctor doctor2 = send.login("drProbando@gmail.com", newPass);
         doctor2.getUser().setRole(role);
