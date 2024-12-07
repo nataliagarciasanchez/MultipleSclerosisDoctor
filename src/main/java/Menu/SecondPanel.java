@@ -9,6 +9,7 @@ import static IOCommunication.DoctorServerCommunicationTest.role;
 import Menu.Utilities.Utilities;
 import POJOs.Bitalino;
 import POJOs.Doctor;
+import POJOs.Feedback;
 import POJOs.Patient;
 import POJOs.Report;
 import POJOs.Role;
@@ -385,7 +386,7 @@ public class SecondPanel extends JPanel {
         whitePanel.add(reportsContainer, BorderLayout.CENTER);
 
         // Obtener los informes del paciente y mostrarlos
-        java.util.List<Report> reports = patient.getReports(); // patient.getReports()
+        java.util.List<Report> reports = patient.getReports(); 
         if (reports != null) {
             updateReportsList(reports, reportsPanel); // Mostrar todos los informes al principio
         } else {
@@ -515,14 +516,30 @@ public class SecondPanel extends JPanel {
         sendFeedbackButton.setForeground(Color.BLACK);
         
         sendFeedbackButton.addActionListener(e -> {
-            String feedback = feedbackField.getText().trim();
-            if (!feedback.isEmpty()) {
-                //sendFeedbackToServer(report, feedback); // Lógica para enviar el feedback
-                JOptionPane.showMessageDialog(whitePanel, "Feedback sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(whitePanel, "Please enter feedback before sending.", "Warning", JOptionPane.WARNING_MESSAGE);
-            }
-        });
+            String feedbackMessage = feedbackField.getText().trim();
+            if (!feedbackMessage.isEmpty()) {
+                // Crear una instancia de Feedback
+                Feedback feedback = new Feedback(
+                    feedbackMessage, // Mensaje del feedback
+                    new java.sql.Date(System.currentTimeMillis()), // Fecha actual
+                    doctor, // Objeto Doctor (asumiendo que está disponible en el contexto)
+                    report.getPatient()  // Objeto Patient correspondiente
+         );
+
+        // Llamar al método para enviar el feedback al servidor
+        send.sendFeedback2Server(feedback);
+        
+        // Mostrar mensaje de confirmación
+        JOptionPane.showMessageDialog(whitePanel, "Feedback sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        
+        // Limpiar el campo de texto
+        feedbackField.setText("");
+    } else {
+        // Mostrar advertencia si no se ingresa mensaje
+        JOptionPane.showMessageDialog(whitePanel, "Please enter feedback before sending.", "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+});
+
         
         contentPanel.add(sendFeedbackButton);
         
