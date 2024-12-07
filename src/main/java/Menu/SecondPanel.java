@@ -286,19 +286,6 @@ public class SecondPanel extends JPanel {
             }
         });
 
-        // Botón para regresar
-        JButton backButton = new JButton("Back");
-        backButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        backButton.setBackground(Color.WHITE);
-        backButton.setForeground(Color.BLACK);
-        backButton.addActionListener(e -> auxiliar());
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.add(backButton);
-
-        whitePanel.add(buttonPanel, BorderLayout.SOUTH);
-
         whitePanel.revalidate();
         whitePanel.repaint();
     }
@@ -432,6 +419,21 @@ public class SecondPanel extends JPanel {
                 }
             }
         });
+        
+        // Botón Back enmarcado
+        JButton backButton = new JButton("Back");
+        backButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        backButton.setBackground(Color.WHITE);
+        backButton.setForeground(Color.BLACK);
+        backButton.setFocusPainted(false);
+        
+        backButton.addActionListener(e -> displayPatients());
+        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(backButton);
+
+        whitePanel.add(buttonPanel, BorderLayout.SOUTH);
 
         whitePanel.revalidate();
         whitePanel.repaint();
@@ -591,8 +593,6 @@ public class SecondPanel extends JPanel {
         whitePanel.revalidate();
         whitePanel.repaint();
     }
-
-    
     
     private void displayDoctorInfoUpdate() {
         whitePanel.removeAll();
@@ -686,9 +686,6 @@ public class SecondPanel extends JPanel {
         whitePanel.repaint();
     }
 
-
-
-    
     private void displayDoctorPasswordUpdate() {
         whitePanel.removeAll();
         whitePanel.setLayout(new BorderLayout());
