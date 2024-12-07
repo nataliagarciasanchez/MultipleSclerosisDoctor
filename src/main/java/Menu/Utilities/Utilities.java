@@ -4,7 +4,9 @@
  */
 package Menu.Utilities;
 
+import POJOs.Doctor;
 import POJOs.Report;
+import POJOs.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -181,6 +183,7 @@ public class Utilities {
         return numbers;
     }
     
+    //TODO are these checkECG and checkEMG useful?
     public static boolean checkECG(Report report) {
         // Lógica para determinar si los valores de ECG están correctos
         // Placeholder: retorna true
@@ -191,5 +194,36 @@ public class Utilities {
         // Lógica para determinar si los valores de EMG están correctos
         // Placeholder: retorna true
         return true;
+    }
+    
+    //TODO use these methods in swing
+    public static List <String> validateDoctor (Doctor patient){
+        List <String> errors = new ArrayList ();
+        
+        if(patient.getName().trim().isEmpty()){
+        errors.add("The name field cannot be empty");
+        }
+        if(patient.getSurname().trim().isEmpty()){
+        errors.add("The surname field cannot be empty");
+        }
+        
+       
+        return errors;
+    }
+    
+    public static List <String> validateUser (User user){
+        List <String> errors = new ArrayList ();
+        
+        if(user.getEmail().trim().isEmpty()){
+        errors.add("The username field cannot be empty");
+        }
+        if(user.getPassword().trim().isEmpty()){
+        errors.add("The password field cannot be empty");
+        }
+        if(!isValidPassword(user.getPassword())){
+        errors.add("Invalid password.");
+        }
+        
+        return errors;
     }
 }
