@@ -111,7 +111,7 @@ public class SecondPanel extends JPanel {
         rightPanel.setLayout(new BorderLayout());
         rightPanel.setOpaque(false);
 
-        titleLabel = new JLabel("Welcome to the MultipleSclerosis Patient app!");
+        titleLabel = new JLabel("Welcome to the MultipleSclerosis Doctor app!");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
