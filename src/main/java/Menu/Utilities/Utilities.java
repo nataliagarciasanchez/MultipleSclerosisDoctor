@@ -4,6 +4,7 @@
  */
 package Menu.Utilities;
 
+import POJOs.Report;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -178,5 +179,17 @@ public class Utilities {
         }
 
         return numbers;
+    }
+    
+    public static boolean checkECG(Report report) {
+        // Lógica para determinar si los valores de ECG están correctos
+        // Placeholder: retorna true
+        return true;
+    }
+
+    public static boolean checkEMG(Report report) {
+        // Lógica para determinar si los valores de EMG están correctos
+        // Placeholder: retorna true
+        return true;
     }
 }

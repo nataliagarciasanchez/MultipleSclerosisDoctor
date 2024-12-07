@@ -17,9 +17,13 @@ import java.util.Objects;
 public class Patient implements Serializable{
     
     private static final long serialVersionUID = 8419572012345678901L;
-    private Integer id;
+    
     private User user;
+    
+    private Integer id;
     private String name;
+    private String surname;
+    private String NIF;
     private Date dob;
     private Gender gender;
     private String phone;
@@ -30,15 +34,39 @@ public class Patient implements Serializable{
     public Patient() {
         super();
     }
-
-    public Patient(Integer id, String name, Date dob, Gender gender, String phone, Doctor doctor, List<Report> reports) {
-        this.id = id;
+    
+    /**
+     * Constructor used to create the patient wo/ the doctor assigned
+     * It will later be assigned by the server
+     * @param name
+     * @param surname
+     * @param NIF
+     * @param dob
+     * @param gender
+     * @param phone 
+     */
+    public Patient(String name, String surname, String NIF, Date dob, Gender gender, String phone) {
+        
         this.name = name;
+        this.surname=surname;
+        this.NIF=NIF;
         this.dob = dob;
         this.gender = gender;
         this.phone = phone;
-        this.doctor = doctor;
-        this.reports = reports;
+        
+    }
+
+    public Patient(String name, String surname, String NIF, Date dob, Gender gender, String phone, Doctor doctor, User user) {
+        
+        this.name = name;
+        this.surname=surname;
+        this.NIF=NIF;
+        this.dob = dob;
+        this.gender = gender;
+        this.phone = phone;
+        this.doctor=doctor;
+        this.user=user;
+        
     }
 
     public static long getSerialVersionUID() {
@@ -81,6 +109,18 @@ public class Patient implements Serializable{
         this.name = name;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+    
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
     public void setDob(Date dob) {
         this.dob = dob;
     }
@@ -101,10 +141,33 @@ public class Patient implements Serializable{
         this.reports = reports;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getNIF() {
+        return NIF;
+    }
+
+    public void setNIF(String NIF) {
+        this.NIF = NIF;
+    }
+    
+    
+
     @Override
     public String toString() {
-        return "Patient{" + "id=" + id + ", name=" + name + ", dob=" + dob + ", gender=" + gender + ", phone=" + phone + ", doctor=" + doctor + ", reports=" + reports + '}';
+        return "User: " + user + "\n"
+                + "ID: " + id + "\n"
+                + "Name: " + name + "\n"
+                + "Surname: " + surname + "\n"
+                + "NIF: " + NIF + "\n"
+                + "Date of Birth: " + dob + "\n"
+                + "Gender: " + gender + "\n"
+                + "Phone: " + phone;
     }
+
+
 
     @Override
     public int hashCode() {
