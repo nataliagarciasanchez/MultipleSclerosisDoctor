@@ -27,9 +27,11 @@ public class PanelPrincipal extends JPanel {
     private JPanel dynamicPanel; // Panel for dynamic content
     private final Image backgroundImage; // Background image
     private final DoctorServerCommunication.Send send;
+    private Role role;
 
     public PanelPrincipal(DoctorServerCommunication.Send send) {
         this.send = send;
+        this.role = new Role();
 
         // Load background image
         backgroundImage = new ImageIcon(getClass().getResource("/images/Fondo.jpg")).getImage();
@@ -163,7 +165,7 @@ public class PanelPrincipal extends JPanel {
         dynamicPanel.repaint();
     }
     
-    private void showSignUpForm() {//CAMBIARLO A DOCTOR
+    private void showSignUpForm() {
         dynamicPanel.removeAll();
 
         JLabel signUpLabel = new JLabel("Sign Up");
@@ -264,7 +266,7 @@ public class PanelPrincipal extends JPanel {
                     nameField.getText().trim(),
                     surnameField.getText().trim()
                 );
-                User user = new User(usernameField.getText().trim(), new String(passwordField.getPassword()).trim(), new Role());
+                User user = new User(usernameField.getText().trim(), new String(passwordField.getPassword()).trim(), role);
                 doctor.setUser(user);
                 send.register(doctor);
                 
