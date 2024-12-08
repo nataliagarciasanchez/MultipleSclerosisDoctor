@@ -22,14 +22,20 @@ public class User implements Serializable{
     private Role role;
 	
     public User() {
-	super();
+	
     }
 	
     public User(String email, String password, Role role) {
-	super();
+	
 	this.email = email;
 	this.password = password;
         this.role=role;
+    }
+    
+    public User (String email, String password){
+        
+        this.email = email;
+        this.password = password;
     }
     
     public Integer getId() {

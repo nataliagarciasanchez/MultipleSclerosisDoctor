@@ -115,10 +115,7 @@ public class PanelPrincipal extends JPanel {
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
            
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            
 
             try {
 
@@ -253,15 +250,7 @@ public class PanelPrincipal extends JPanel {
         cancelButton.addActionListener(e -> showDefaultContent());
         okButton.addActionListener(e -> {
             try {
-                if (nameField.getText().trim().isEmpty() || surnameField.getText().trim().isEmpty() ||
-                    usernameField.getText().trim().isEmpty() ||
-                    new String(passwordField.getPassword()).trim().isEmpty()) {
-                throw new IllegalArgumentException("All fields must be filled.");
-                }
-                if (!Utilities.isValidPassword(new String(passwordField.getPassword()).trim())) {
-                throw new IllegalArgumentException("Invalid password.");
-                }
-               
+                               
                 Doctor doctor = new Doctor(
                     nameField.getText().trim(),
                     surnameField.getText().trim()

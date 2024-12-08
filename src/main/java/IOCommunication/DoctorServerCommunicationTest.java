@@ -33,8 +33,8 @@ public class DoctorServerCommunicationTest {
         com.start();
         send= com.new Send();
         role=new Role();
-        //register();
-        login();
+        register();
+        //login();
         //updateInfo();
         //viewPersonalInfo();
         //viewPatients();
@@ -42,8 +42,8 @@ public class DoctorServerCommunicationTest {
     }
     
     public static void register() {
-        Doctor noelia = new Doctor("Dr.Noelia", "Auba");
-        User user = new User("drProbando@gmail.com", "Password123", role);
+        Doctor noelia = new Doctor("Dr. Noelia", "Aubá");
+        User user = new User("drNoelia@multipleSclerosis.com", "Password123", role);
         noelia.setUser(user);
         send.register(noelia);
     }

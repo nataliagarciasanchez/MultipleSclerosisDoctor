@@ -65,14 +65,15 @@ public class DoctorServerCommunication {
          */
         public void register(Doctor doctor) {
             try {
+                
+                Utilities.validateRegisterDoctor(doctor);
+                
                 out.writeObject("register"); // Acción de registro
                 out.flush();
                 
-                //TODO quitar souts
-                System.out.println("Plain: " + doctor.getUser().getPassword()); // para comprobar si el hash se hace bien
                 String hashedPassword = PasswordEncryption.hashPassword(doctor.getUser().getPassword()); 
                 doctor.getUser().setPassword(hashedPassword); // para comprobar si el hash se hace bien
-                System.out.println("Hashed: " + doctor.getUser().getPassword());
+                
                 
                 out.writeObject(doctor.getUser());//envía los datos de registro al server
                 out.writeObject(doctor);
@@ -102,6 +103,9 @@ public class DoctorServerCommunication {
         public Doctor login(String username, String password) {
             
             try {
+                User user = new User(username, password);
+                Utilities.validateLogin(user);            
+                
                 out.writeObject("login"); // Acción de inicio de sesión
                 out.writeObject(username);
                 
@@ -119,6 +123,7 @@ public class DoctorServerCommunication {
                    String errorMessage = (String) response; // Mensaje de error
                    System.out.println("Error: " + errorMessage); 
                 }
+                
   
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
