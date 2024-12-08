@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class Symptom {
     
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1234567890123456789L;
     private Integer id;
     private String name;
     
