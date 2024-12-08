@@ -298,7 +298,7 @@ public class SecondPanel extends JPanel {
     private void updatePatientsList(java.util.List<Patient> patients, JPanel patientsPanel) {
         patientsPanel.removeAll(); // Limpiar el contenido anterior
 
-        Dimension fixedSize = new Dimension(1000, 50); // Tamaño fijo para cada panel de paciente
+        Dimension fixedSize = new Dimension(700, 50); // Tamaño fijo para cada panel de paciente
 
         for (Patient patient : patients) {
             JPanel patientPanel = new JPanel(new BorderLayout());
