@@ -91,15 +91,19 @@ public class SecondPanel extends JPanel {
 
         JButton viewInfoButton = createStyledButton("View My Information");
         JButton viewPatients = createStyledButton("View Patients");
+        JButton viewReports = createStyledButton("View Reports");
         JButton settingsButton = createStyledButton("Settings");
         
         viewInfoButton.addActionListener(e -> displayDoctorInfo());
         viewPatients.addActionListener(e -> displayPatients());
+        viewReports.addActionListener(e -> displayReports());
         settingsButton.addActionListener(e -> auxiliar());
         
         buttonPanel.add(viewInfoButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(viewPatients);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttonPanel.add(viewReports);
         buttonPanel.add(Box.createVerticalGlue()); 
         buttonPanel.add(settingsButton);
 
@@ -516,29 +520,29 @@ public class SecondPanel extends JPanel {
         sendFeedbackButton.setForeground(Color.BLACK);
         
         sendFeedbackButton.addActionListener(e -> {
-            String feedbackMessage = feedbackField.getText().trim();
-            if (!feedbackMessage.isEmpty()) {
-                // Crear una instancia de Feedback
-                Feedback feedback = new Feedback(
-                    feedbackMessage, // Mensaje del feedback
-                    new java.sql.Date(System.currentTimeMillis()), // Fecha actual
-                    doctor, // Objeto Doctor (asumiendo que está disponible en el contexto)
-                    report.getPatient()  // Objeto Patient correspondiente
-         );
+                String feedbackMessage = feedbackField.getText().trim();
+                if (!feedbackMessage.isEmpty()) {
+                    // Crear una instancia de Feedback
+                    Feedback feedback = new Feedback(
+                        feedbackMessage, // Mensaje del feedback
+                        new java.sql.Date(System.currentTimeMillis()), // Fecha actual
+                        doctor, // Objeto Doctor (asumiendo que está disponible en el contexto)
+                        report.getPatient()  // Objeto Patient correspondiente
+                     );
 
-        // Llamar al método para enviar el feedback al servidor
-        send.sendFeedback2Server(feedback);
-        
-        // Mostrar mensaje de confirmación
-        JOptionPane.showMessageDialog(whitePanel, "Feedback sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        
-        // Limpiar el campo de texto
-        feedbackField.setText("");
-    } else {
-        // Mostrar advertencia si no se ingresa mensaje
-        JOptionPane.showMessageDialog(whitePanel, "Please enter feedback before sending.", "Warning", JOptionPane.WARNING_MESSAGE);
-    }
-});
+                    // Llamar al método para enviar el feedback al servidor
+                    send.sendFeedback2Server(feedback);
+
+                    // Mostrar mensaje de confirmación
+                    JOptionPane.showMessageDialog(whitePanel, "Feedback sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Limpiar el campo de texto
+                    feedbackField.setText("");
+                } else {
+                    // Mostrar advertencia si no se ingresa mensaje
+                    JOptionPane.showMessageDialog(whitePanel, "Please enter feedback before sending.", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+        });
 
         
         contentPanel.add(sendFeedbackButton);
@@ -560,6 +564,135 @@ public class SecondPanel extends JPanel {
         whitePanel.revalidate();
         whitePanel.repaint();
     }
+    
+    
+    private void displayReports() {
+        whitePanel.removeAll(); // Limpiar el contenido del panel blanco
+        whitePanel.setLayout(new BorderLayout());
+
+        // Título de búsqueda
+        JLabel searchLabel = new JLabel("Search reports by date (YYYY-MM-DD):");
+        searchLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+
+        // Campo de texto para buscar reports
+        JTextField searchField = new JTextField();
+        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+
+        // Panel para el buscador
+        JPanel searchPanel = new JPanel(new BorderLayout());
+        searchPanel.setBackground(Color.WHITE);
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        searchPanel.add(searchLabel, BorderLayout.WEST);
+        searchPanel.add(searchField, BorderLayout.CENTER);
+
+        whitePanel.add(searchPanel, BorderLayout.NORTH);
+
+        // Panel principal para los reports con un JScrollPane
+        JPanel reportsPanel = new JPanel();
+        reportsPanel.setLayout(new BoxLayout(reportsPanel, BoxLayout.Y_AXIS));
+        reportsPanel.setBackground(Color.WHITE);
+
+        JScrollPane scrollPane = new JScrollPane(reportsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Incremento de desplazamiento
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        whitePanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Obtener la lista de reports desde el servidor
+        java.util.List<Patient> patients = send.viewPatients(doctor); 
+        java.util.List<Report> reports = new ArrayList<>();
+        for (Patient patient : patients) {
+            if (patient.getReports() != null) { // Verificar que la lista de reports no sea null
+                reports.addAll(patient.getReports()); // Acumular reports solo si no es null
+            }
+        }
+
+        if (!reports.isEmpty()) {
+            updateReportsList2(reports, reportsPanel); 
+        }else {
+            reportsPanel.setLayout(new BoxLayout(reportsPanel, BoxLayout.Y_AXIS));
+
+            JLabel noReportsLabel = new JLabel("No reports received from server.");
+            noReportsLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            noReportsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            noReportsLabel.setForeground(Color.GRAY);
+
+            reportsPanel.add(Box.createVerticalGlue()); // Añadir espacio arriba
+            reportsPanel.add(noReportsLabel); // Añadir el mensaje
+            reportsPanel.add(Box.createVerticalGlue()); // Añadir espacio abajo
+
+            reportsPanel.revalidate();
+            reportsPanel.repaint();
+        }
+
+        // Actualizar la lista de reports en función de la búsqueda
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterReports();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterReports();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filterReports();
+            }
+
+            private void filterReports() {
+                String searchText = searchField.getText().toLowerCase();
+                if (reports != null) {
+                    java.util.List<Report> filteredReports = reports.stream()
+                            .filter(report -> report.getDate().toString().contains(searchText)) // Filtrar por fecha
+                            .collect(Collectors.toList());
+                    updateReportsList(filteredReports, reportsPanel);
+                }
+            }
+        });
+
+        whitePanel.revalidate();
+        whitePanel.repaint();
+    }
+
+    private void updateReportsList2(java.util.List<Report> reports, JPanel reportsPanel) {
+        reportsPanel.removeAll(); // Limpiar el contenido anterior
+
+        Dimension fixedSize = new Dimension(1000, 50); // Tamaño fijo para cada panel de report
+
+        for (Report report : reports) {
+            JPanel reportPanel = new JPanel(new BorderLayout());
+            reportPanel.setBackground(Color.LIGHT_GRAY);
+            reportPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            reportPanel.setPreferredSize(fixedSize); // Fijar el tamaño del panel
+            reportPanel.setMaximumSize(fixedSize); // Asegurar que no crezca más allá de este tamaño
+            reportPanel.setMinimumSize(fixedSize); // Asegurar que no se reduzca más allá de este tamaño
+
+            JLabel reportLabel = new JLabel("Date: " + report.getDate().toString() + " | Patient: " + report.getPatient().getName());
+            reportLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+
+            JButton viewButton = new JButton("View Details");
+            viewButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            viewButton.setBackground(Color.WHITE);
+            viewButton.setForeground(Color.BLACK);
+
+            viewButton.addActionListener(e -> viewDetailReport(report)); // Lógica para mostrar los detalles del report
+
+            reportPanel.add(reportLabel, BorderLayout.CENTER);
+            reportPanel.add(viewButton, BorderLayout.EAST);
+
+            reportsPanel.add(reportPanel);
+            reportsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Espacio entre reports
+        }
+
+        reportsPanel.revalidate();
+        reportsPanel.repaint();
+    }
+
     
     private void auxiliar() {
         whitePanel.removeAll();
