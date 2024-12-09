@@ -33,12 +33,12 @@ public class DoctorServerCommunicationTest {
         com.start();
         send= com.new Send();
         role=new Role();
-        register();
+        //register();
         //login();
         //updateInfo();
         //viewPersonalInfo();
         //viewPatients();
-        //checkReports
+        checkReports();
     }
     
     public static void register() {
@@ -116,7 +116,7 @@ public class DoctorServerCommunicationTest {
         }
         //en el report que seleccione deberá aparece un espacio para escribir el feedback y mandarlo
         //devuelve el report seleccionado y se lo manda a sendFeedback
-        sendFeedback2Server(report);
+        //sendFeedback2Server(report);
     }
     
     
@@ -140,6 +140,31 @@ public class DoctorServerCommunicationTest {
         Feedback feedback=new Feedback(message,report.getDate(),doctor,patient);
         send.sendFeedback2Server(feedback);
     }
+    /*
+    public void testSendAndReceiveFeedback() {
+    try {
+        // Paso 1: Crear un objeto Feedback
+        Doctor doctor = send.login("doctor.perales@multipleSclerosis.com", "Password678");
+       
+        Feedback feedback = new Feedback("Great progress!", Date.valueOf(LocalDate.now()), doctor, dummyPatient);
+        
+        // Paso 2: Enviar el feedback al servidor
+        System.out.println("Enviando feedback al servidor...");
+        send.sendFeedback2Server(feedback);
+        
+        // Paso 3: Validar el feedback recibido (asume que el servidor envía una confirmación)
+        Object response = in.readObject(); // Leer respuesta del servidor
+        if (response instanceof String) {
+            String confirmation = (String) response;
+            System.out.println("Respuesta del servidor: " + confirmation);
+        } else {
+            System.err.println("Respuesta inesperada del servidor: " + response);
+        }
+    } catch (IOException | ClassNotFoundException ex) {
+        Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}*/
+
     
 }
 

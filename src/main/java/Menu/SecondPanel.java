@@ -16,6 +16,7 @@ import POJOs.Role;
 import POJOs.SignalType;
 import POJOs.Symptom;
 import POJOs.User;
+import Report.ProcessReport;
 import Security.PasswordEncryption;
 import java.awt.*;
 import java.util.*;
@@ -497,10 +498,10 @@ public class SecondPanel extends JPanel {
             : "No symptoms reported"));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        contentPanel.add(createInfoLine("2. ECG: ", Utilities.checkECG(report) ? "Values are OK" : "Values are NOT OK"));
+        contentPanel.add(createInfoLine("2. ECG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(1))));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        contentPanel.add(createInfoLine("3. EMG: ", Utilities.checkEMG(report) ? "Values are OK" : "Values are NOT OK"));
+       
+        contentPanel.add(createInfoLine("3. EMG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(0))));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         
         JLabel feedbackLabel = new JLabel("4. Send Feedback to Patient:");
