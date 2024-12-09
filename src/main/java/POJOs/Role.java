@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 
 public class Role implements Serializable{
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8374165239476142837L;
     private Integer id;
     private String name;
     private List<User> users;

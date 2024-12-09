@@ -829,6 +829,7 @@ public class SecondPanel extends JPanel {
                 return;
             }
 
+            
             doctor.setName(nameField.getText());
             doctor.setSurname(surnameField.getText());
             User user = doctor.getUser();
@@ -928,10 +929,13 @@ public class SecondPanel extends JPanel {
                     return;
                 }
 
-                User user = doctor.getUser();
+                User user = new User();
+                user.setId(doctor.getUser().getId());
+                user.setEmail(doctor.getUser().getEmail());
                 user.setPassword(newPassword);
                 user.setRole(role);
-                send.updateInformation(user, doctor);
+                
+                send.updateInformation(user, doctor); 
 
                 JOptionPane.showMessageDialog(whitePanel, "Password successfully updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 auxiliar();
