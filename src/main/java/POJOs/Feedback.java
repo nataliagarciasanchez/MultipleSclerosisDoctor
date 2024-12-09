@@ -4,6 +4,7 @@
  */
 package POJOs;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author Andreoti
  */
-public class Feedback {
+public class Feedback implements Serializable{
     
      private static final long serialVersionUID = 3491289476129837461L;
      private Integer id;
