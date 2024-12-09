@@ -140,7 +140,7 @@ public class PanelPrincipal extends JPanel {
                 }
 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error during login: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error during login", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -169,84 +169,30 @@ public class PanelPrincipal extends JPanel {
         signUpLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
         signUpLabel.setForeground(Color.WHITE);
         signUpLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Crear panel de formulario con GridBagLayout
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setOpaque(false); // Fondo transparente
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(3, 10, 3, 10); // Espaciado reducido entre filas
-
-        // Dimensiones ajustadas para campos más grandes
-        Dimension labelSize = new Dimension(220, 40);
-        Dimension fieldSize = new Dimension(350, 40);
-
-        // Campos de texto y etiquetas
-        JLabel nameLabel = new JLabel("Name:");
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        nameLabel.setForeground(Color.WHITE);
-        nameLabel.setPreferredSize(labelSize);
+        
         JTextField nameField = new JTextField();
-        nameField.setPreferredSize(fieldSize);
-        nameField.setMaximumSize(fieldSize);
-        nameLabel.setToolTipText("Enter your full first name. Example: John");
+        nameField.setPreferredSize(new Dimension(350, 40));
+        nameField.setMaximumSize(new Dimension(350, 40));
+        JPanel namePanel = createAlignedRow("Name:", nameField);
 
-        JLabel surnameLabel = new JLabel("Surname:");
-        surnameLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        surnameLabel.setForeground(Color.WHITE);
-        surnameLabel.setPreferredSize(labelSize);
         JTextField surnameField = new JTextField();
-        surnameField.setPreferredSize(fieldSize);
-        surnameField.setMaximumSize(fieldSize);
-        surnameLabel.setToolTipText("Enter your last name. Example: Doe");
+        surnameField.setPreferredSize(new Dimension(350, 40));
+        surnameField.setMaximumSize(new Dimension(350, 40));
+        JPanel surnamePanel = createAlignedRow("Surname:", surnameField);
 
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        usernameLabel.setForeground(Color.WHITE);
-        usernameLabel.setPreferredSize(labelSize);
         JTextField usernameField = new JTextField();
-        usernameField.setPreferredSize(fieldSize);
-        usernameField.setMaximumSize(fieldSize);
-        usernameLabel.setToolTipText("Enter a unique username. Example: johndoe@gmail.com");
+        usernameField.setPreferredSize(new Dimension(350, 40));
+        usernameField.setMaximumSize(new Dimension(350, 40));
+        JPanel usernamePanel = createAlignedRow("Username:", usernameField);
 
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        passwordLabel.setForeground(Color.WHITE);
-        passwordLabel.setPreferredSize(labelSize);
         JPasswordField passwordField = new JPasswordField();
-        passwordField.setPreferredSize(fieldSize);
-        passwordField.setMaximumSize(fieldSize);
-        passwordLabel.setToolTipText("Enter a strong password with at least 8 characters, including uppercase, lowercase, and a number.");
-
-        // Agregar filas al panel de formulario
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        formPanel.add(nameLabel, gbc);
-        gbc.gridx = 1;
-        formPanel.add(nameField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        formPanel.add(surnameLabel, gbc);
-        gbc.gridx = 1;
-        formPanel.add(surnameField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        formPanel.add(usernameLabel, gbc);
-        gbc.gridx = 1;
-        formPanel.add(usernameField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        formPanel.add(passwordLabel, gbc);
-        gbc.gridx = 1;
-        formPanel.add(passwordField, gbc);
-
-        // Botones
+        passwordField.setPreferredSize(new Dimension(350, 40));
+        passwordField.setMaximumSize(new Dimension(350, 40));
+        JPanel passwordPanel = createAlignedRow("Password:", passwordField);
+        
         JButton cancelButton = new JButton("Cancel");
         JButton okButton = new JButton("OK");
-
+        
         cancelButton.addActionListener(e -> showDefaultContent());
         okButton.addActionListener(e -> {
             try {
@@ -265,22 +211,44 @@ public class PanelPrincipal extends JPanel {
                 JOptionPane.showMessageDialog(this, "Error during registration. " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
+        
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         buttonPanel.setOpaque(false);
         buttonPanel.add(cancelButton);
         buttonPanel.add(okButton);
 
-        // Añadir componentes al dynamicPanel
-        dynamicPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        dynamicPanel.setLayout(new BoxLayout(dynamicPanel, BoxLayout.Y_AXIS)); 
+        dynamicPanel.add(Box.createVerticalGlue());
         dynamicPanel.add(signUpLabel);
-        dynamicPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        dynamicPanel.add(formPanel);
+        dynamicPanel.add(Box.createRigidArea(new Dimension(0, 30))); 
+        dynamicPanel.add(namePanel);
+        dynamicPanel.add(surnamePanel);
+        dynamicPanel.add(usernamePanel);
+        dynamicPanel.add(passwordPanel);
         dynamicPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         dynamicPanel.add(buttonPanel);
+        dynamicPanel.add(Box.createVerticalGlue()); 
 
         dynamicPanel.revalidate();
         dynamicPanel.repaint();
+    }
+    
+    private JPanel createAlignedRow(String labelText, JComponent field) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 0)); 
+        row.setOpaque(false); 
+
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setForeground(Color.WHITE);
+        label.setPreferredSize(new Dimension(220, 40)); 
+
+        field.setPreferredSize(new Dimension(350, 40)); 
+        field.setMaximumSize(new Dimension(350, 40));
+
+        row.add(label);
+        row.add(field);
+
+        return row;
     }
 
 
