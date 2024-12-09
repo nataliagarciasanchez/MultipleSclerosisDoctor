@@ -4,6 +4,7 @@
  */
 package POJOs;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Objects;
  * @author Andreoti
  */
 
-public class Symptom {
+public class Symptom implements Serializable{
     
     private static final long serialVersionUID = 1234567890123456789L;
     private Integer id;
