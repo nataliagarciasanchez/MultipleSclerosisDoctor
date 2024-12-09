@@ -19,6 +19,7 @@ import POJOs.User;
 import Report.ProcessReport;
 import Security.PasswordEncryption;
 import java.awt.*;
+import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -481,6 +482,40 @@ public class SecondPanel extends JPanel {
             ? report.getSymptoms().stream().map(Symptom::getName).collect(Collectors.joining(", "))
             : "No symptoms reported"));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        
+        JButton downloadSignalsButton = new JButton("View Signal Values");
+        downloadSignalsButton.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        downloadSignalsButton.setBackground(Color.WHITE);
+        downloadSignalsButton.setForeground(Color.BLACK);
+        
+        downloadSignalsButton.addActionListener(e -> {
+                
+            try {
+                File signalsFile = send.getSignalsFile(report);
+
+                if (signalsFile != null && signalsFile.exists()) {
+                    // Usar Desktop para abrir el archivo automáticamente
+                    Desktop desktop = Desktop.getDesktop();
+                    if (desktop.isSupported(Desktop.Action.OPEN)) {
+                        desktop.open(signalsFile);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Opening files is not supported on your system.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    // Mostrar mensaje si no se pudo generar o encontrar el archivo
+                    JOptionPane.showMessageDialog(null, "Failed to generate or retrieve the file.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+               
+        });
+        
+        contentPanel.add(downloadSignalsButton);
+        whitePanel.add(contentPanel, BorderLayout.CENTER);
 
         /*contentPanel.add(createInfoLine("2. ECG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(1))));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));

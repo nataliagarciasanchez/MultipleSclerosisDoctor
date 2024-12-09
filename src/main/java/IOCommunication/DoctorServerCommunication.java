@@ -12,6 +12,7 @@ import POJOs.Report;
 import POJOs.User;
 import Report.ProcessReport;
 import Security.PasswordEncryption;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -210,6 +211,30 @@ public class DoctorServerCommunication {
             }
 
         return patients;
+        }
+        
+        public File getSignalsFile(Report report){
+            File signalsFile = null;
+            try {
+                // Send the request to the server
+                System.out.println("Requesting signals file...");
+                out.writeObject("getSignalsFile");
+                out.flush();
+                System.out.println("getSignalsFileRequest sent");
+                
+                out.writeObject(report);
+                out.flush();
+                
+                signalsFile = (File) in.readObject();
+                System.out.println("File received:");
+
+                
+
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        return signalsFile;
         }
         
         public void sendFeedback2Server(Feedback feedback){
