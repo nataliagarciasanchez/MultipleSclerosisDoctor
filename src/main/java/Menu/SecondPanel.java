@@ -821,22 +821,20 @@ public class SecondPanel extends JPanel {
 
         saveButton.addActionListener(e -> {
             try {
-                if (nameField.getText().trim().isEmpty() || surnameField.getText().trim().isEmpty()) {
-                    throw new IllegalArgumentException("All fields must be filled.");
-                }
+                doctor.setName(nameField.getText());
+                doctor.setSurname(surnameField.getText());
+                User user = doctor.getUser();
+                user.setRole(role);
+                send.updateInformation(user, doctor);
+
+                JOptionPane.showMessageDialog(this, "Patient information updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             
-            doctor.setName(nameField.getText());
-            doctor.setSurname(surnameField.getText());
-            User user = doctor.getUser();
-            user.setRole(role);
-            send.updateInformation(user, doctor);
-
-            JOptionPane.showMessageDialog(this, "Patient information updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            
         });
 
         cancelButton.addActionListener(e -> auxiliar());
@@ -924,10 +922,7 @@ public class SecondPanel extends JPanel {
                     return;
                 }
 
-                if (!Utilities.isValidPassword(newPassword)) {
-                    JOptionPane.showMessageDialog(whitePanel, "Password must be at least 8 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+                
 
                 User user = new User();
                 user.setId(doctor.getUser().getId());
