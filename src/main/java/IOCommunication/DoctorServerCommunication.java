@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -52,6 +53,10 @@ public class DoctorServerCommunication {
             //new Thread(new Receive(in)).start();
         } catch (IOException ex) {
             Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, 
+            "Connection to the server was lost. Please try again later.",
+            "Connection Error", JOptionPane.ERROR_MESSAGE);
+        System.exit(0);
         }
     }
     
