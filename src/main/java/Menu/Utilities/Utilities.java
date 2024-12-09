@@ -41,6 +41,11 @@ public class Utilities {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+    
+    public static boolean isValidOnlyLetters(String input){
+        String regex = "^[a-zA-Z]+$";
+        return input != null && input.matches(regex);
+    }
 
     public static boolean validMenu(int numOps, int num) {
         boolean ok = true;
@@ -202,8 +207,14 @@ public class Utilities {
         if(doctor.getName().trim().isEmpty()){
             throw new IllegalArgumentException("The name field cannot be empty.");
         }
+        if(!isValidOnlyLetters(doctor.getName())){
+            throw new IllegalArgumentException("Invalid name. Only letters are accepted.");
+        }
         if(doctor.getSurname().trim().isEmpty()){
             throw new IllegalArgumentException("The surname field cannot be empty.");
+        }
+        if (!isValidOnlyLetters(doctor.getSurname())){
+        throw new IllegalArgumentException("Invalid surname. Only letters are accepted.");
         }
         if (doctor.getUser().getEmail().trim().isEmpty()) {
             throw new IllegalArgumentException("The username field cannot be empty.");
