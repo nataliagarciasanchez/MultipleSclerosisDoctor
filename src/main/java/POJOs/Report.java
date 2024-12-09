@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class Report implements Serializable{
     
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8799656478674716638L;
     private Integer id;
     private Date date;
     private Patient patient;
