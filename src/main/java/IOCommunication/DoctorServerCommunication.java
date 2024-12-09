@@ -214,6 +214,7 @@ public class DoctorServerCommunication {
         
         public void sendFeedback2Server(Feedback feedback){
             try {
+                System.out.println(feedback.toString());
                 out.writeObject("sendFeedback");
                 out.writeObject(feedback);
                 out.flush();

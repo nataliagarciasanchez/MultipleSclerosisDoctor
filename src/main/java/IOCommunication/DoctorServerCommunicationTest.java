@@ -37,8 +37,8 @@ public class DoctorServerCommunicationTest {
         //login();
         //updateInfo();
         //viewPersonalInfo();
-        //viewPatients();
-        checkReports();
+        viewPatients();
+        //checkReports();
     }
     
     public static void register() {
@@ -80,12 +80,21 @@ public class DoctorServerCommunicationTest {
     }
 
     public static void viewPatients() {
-        Doctor doctor = send.login("doctor.garcia@multipleSclerosis.com", "Password456");
+        Doctor doctor = send.login("doctor.perales@multipleSclerosis.com", "Password678");
         doctor.getUser().setRole(role);
         List<Patient> patients = send.viewPatients(doctor);
         Iterator<Patient> it = patients.listIterator();
         while (it.hasNext()) {
             System.out.println(it.next());
+            
+        }
+        for (Patient patient : patients){
+            List <Report> reports = patient.getReports();
+            for (Report report : reports){
+                System.out.println("Report\nid: " + report.getId() + "\ndate: " + report.getDate());
+                System.out.println("Symptoms: " + report.getSymptoms().toString());
+                System.out.println("Bitalinos: " + report.getBitalinos().toString());
+            }
         }
 
     }
