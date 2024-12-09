@@ -33,6 +33,7 @@ public class MainDoctorGUI {
 
             // Inicializar la conexión al servidor
             patientServerCom = new DoctorServerCommunication(serverAddress, port);
+            patientServerCom.start(); 
             send = patientServerCom.new Send();
 
             JOptionPane.showMessageDialog(null, "Connected to the server successfully!", "Connection Status", JOptionPane.INFORMATION_MESSAGE);
@@ -44,10 +45,10 @@ public class MainDoctorGUI {
             });
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Invalid port number. Exiting the application.", "Error", JOptionPane.ERROR_MESSAGE);
-        }/*catch (IOException e) {
-            Logger.getLogger(MainDoctorGUI.class.getName()).log(Level.SEVERE, "Error connecting to server", e);
-            JOptionPane.showMessageDialog(null, "Could not connect to the server. Please check the server IP and port.", "Connection Error", JOptionPane.ERROR_MESSAGE);
-        }*/
+            JOptionPane.showMessageDialog(null, "Invalid port number. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            Logger.getLogger(MainDoctorGUI.class.getName()).log(Level.SEVERE, "Unexpected error", e);
+            JOptionPane.showMessageDialog(null, "An unexpected error occurred. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
