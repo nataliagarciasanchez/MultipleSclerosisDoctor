@@ -493,7 +493,7 @@ public class SecondPanel extends JPanel {
         downloadSignalsButton.setForeground(Color.BLACK);
         
         downloadSignalsButton.addActionListener(e -> {
-            downloadSignalsButton.setEnabled(false); // Desactiva el botón mientras se ejecuta la operación
+            downloadSignalsButton.setEnabled(false);
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
@@ -508,19 +508,18 @@ public class SecondPanel extends JPanel {
                                 JOptionPane.showMessageDialog(null, "Opening files is not supported on your system.", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "Failed to generate or retrieve the file.", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "No file received from server. Please check the report and try again.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "An error occurred while downloading the file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     return null;
                 }
 
                 @Override
                 protected void done() {
-                    downloadSignalsButton.setEnabled(true); // Reactiva el botón cuando se complete la operación
-                    //viewDetailReport(report); // Actualiza la vista después de la operación
+                    downloadSignalsButton.setEnabled(true);
                 }
             }.execute();
         });
