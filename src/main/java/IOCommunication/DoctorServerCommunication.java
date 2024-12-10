@@ -1,16 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package IOCommunication;
 import Menu.Utilities.Utilities;
-import POJOs.Bitalino;
 import POJOs.Doctor;
 import POJOs.Feedback;
 import POJOs.Patient;
 import POJOs.Report;
 import POJOs.User;
-import Report.ProcessReport;
 import Security.PasswordEncryption;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,7 +13,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,8 +24,8 @@ import javax.swing.JOptionPane;
  */
 public class DoctorServerCommunication {
     
-    private String serverAddress;
-    private int serverPort;
+    private final String serverAddress;
+    private final int serverPort;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -52,7 +46,7 @@ public class DoctorServerCommunication {
             System.out.println("Doctor connected to server");
             String message = "DoctorServerCommunication";
             out.writeObject(message);
-            //new Thread(new Receive(in)).start();
+            
         } catch (IOException ex) {
             Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, 
@@ -123,11 +117,11 @@ public class DoctorServerCommunication {
                 
                 System.out.println("Logging in.....");
                 Object response=in.readObject();
-                if(response instanceof Doctor){//si es de tipo patient es que las credenciales son correctas
-                   doctor = (Doctor) response;
+                if(response instanceof Doctor doctor1){//si es de tipo patient es que las credenciales son correctas
+                   doctor = doctor1;
                    System.out.println("Successfull log in!");
-                }else if (response instanceof String){
-                   String errorMessage = (String) response; // Mensaje de error
+                }else if (response instanceof String errorMessage){ // Mensaje de error
+                    // Mensaje de error
                    System.out.println("Error: " + errorMessage); 
                 }
                 
@@ -196,6 +190,7 @@ public class DoctorServerCommunication {
         
         /**
          * Shows list of patients the doctor has assigned
+         * @param doctor
          * @return list of patients
          */
         public List <Patient> viewPatients(Doctor doctor) {
@@ -257,7 +252,7 @@ public class DoctorServerCommunication {
                 } else {
                     System.out.println("Unexpected response from server.");
                 }
-            } catch (Exception ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
 
