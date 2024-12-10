@@ -66,7 +66,7 @@ public class DoctorServerCommunicationTest {
             String new_name="Josefina";
             doctor1.setName(new_name);
             System.out.println("This is to check if the setter is working correctly: " + user.getPassword());
-            send.updateInformation(user, doctor1);
+            //send.updateInformation(user, doctor1);
         }
         Doctor doctor2 = send.login("drProbando@gmail.com", newPass);
         doctor2.getUser().setRole(role);

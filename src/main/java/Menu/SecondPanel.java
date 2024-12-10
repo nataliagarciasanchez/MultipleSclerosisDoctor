@@ -37,15 +37,13 @@ import javax.swing.event.DocumentListener;
  */
 public class SecondPanel extends JPanel {
 
-    private JPanel whitePanel; // Dynamic white panel
-    private JLabel titleLabel; // Main title
-    private java.util.List<Symptom> symptomsList; // Symptom list
+    private JPanel whitePanel; 
+    private JLabel titleLabel;
     private Doctor doctor;
-    private final Image backgroundImage; // Background image
+    private final Image backgroundImage; 
     private final DoctorServerCommunication.Send send;
     private LocalDate date = LocalDate.now();
     public static String macAddress = "98:D3:41:FD:4E:E8";
-    private java.util.List<Bitalino> bitalinos; // Symptom list
     public static Role role;
 
     public SecondPanel(Doctor doctor, DoctorServerCommunication.Send send) {
@@ -466,8 +464,6 @@ public class SecondPanel extends JPanel {
         reportsPanel.repaint();
     }
 
- 
-
     private void viewDetailReport(Report report) {
         whitePanel.removeAll();
         whitePanel.setLayout(new BorderLayout());
@@ -487,6 +483,12 @@ public class SecondPanel extends JPanel {
                 : "No symptoms reported"));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
+        contentPanel.add(createInfoLine("2. ECG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(1))));
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        contentPanel.add(createInfoLine("3. EMG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(0))));
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        
         JButton downloadSignalsButton = new JButton("View Signal Values");
         downloadSignalsButton.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         downloadSignalsButton.setBackground(Color.WHITE);
@@ -524,12 +526,6 @@ public class SecondPanel extends JPanel {
             }.execute();
         });
         contentPanel.add(downloadSignalsButton);
-        whitePanel.add(contentPanel, BorderLayout.CENTER);
-
-        contentPanel.add(createInfoLine("2. ECG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(1))));
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        contentPanel.add(createInfoLine("3. EMG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(0))));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JLabel feedbackLabel = new JLabel("4. Send Feedback to Patient:");
@@ -587,15 +583,12 @@ public class SecondPanel extends JPanel {
         whitePanel.removeAll();
         whitePanel.setLayout(new BorderLayout());
 
-        // Título de búsqueda
         JLabel searchLabel = new JLabel("Search reports by date (YYYY-MM-DD):");
         searchLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 
-        // Campo de texto para buscar reports
         JTextField searchField = new JTextField();
         searchField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 
-        // Panel para el buscador
         JPanel searchPanel = new JPanel(new BorderLayout());
         searchPanel.setBackground(Color.WHITE);
         searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -787,6 +780,7 @@ public class SecondPanel extends JPanel {
 
         JTextField nameField = new JTextField(doctor.getName() != null ? doctor.getName() : "");
         nameField.setPreferredSize(fieldSize);
+        nameField.setToolTipText("Enter your full first name. Example: John");
         gbc.gridx = 1;
         contentPanel.add(nameField, gbc);
 
@@ -798,6 +792,7 @@ public class SecondPanel extends JPanel {
 
         JTextField surnameField = new JTextField(doctor.getSurname() != null ? doctor.getSurname() : "");
         surnameField.setPreferredSize(fieldSize);
+        surnameField.setToolTipText("Enter your last name. Example: Doe");
         gbc.gridx = 1;
         contentPanel.add(surnameField, gbc);
 
@@ -824,7 +819,8 @@ public class SecondPanel extends JPanel {
                 doctor.setSurname(surnameField.getText());
                 User user = doctor.getUser();
                 user.setRole(role);
-                send.updateInformation(user, doctor);
+                String samePassword = user.getPassword();
+                send.updateInformation(user, doctor, samePassword);
 
                 JOptionPane.showMessageDialog(this, "Patient information updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IllegalArgumentException ex) {
@@ -843,7 +839,6 @@ public class SecondPanel extends JPanel {
 
         whitePanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Refresh the whitePanel
         whitePanel.revalidate();
         whitePanel.repaint();
     }
@@ -885,10 +880,12 @@ public class SecondPanel extends JPanel {
         gbc.anchor = GridBagConstraints.LINE_START;
 
         JPasswordField newPasswordField = new JPasswordField(20);
+        newPasswordField.setToolTipText("Enter a strong password with at least 8 characters, including uppercase, lowercase, and a number.");
         passwordPanel.add(newPasswordField, gbc);
 
         gbc.gridy++;
         JPasswordField confirmPasswordField = new JPasswordField(20);
+        confirmPasswordField.setToolTipText("Enter a strong password with at least 8 characters, including uppercase, lowercase, and a number.");
         passwordPanel.add(confirmPasswordField, gbc);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -911,28 +908,20 @@ public class SecondPanel extends JPanel {
             String newPassword = new String(newPasswordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
             try {
-                if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
-                    JOptionPane.showMessageDialog(whitePanel, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (!newPassword.equals(confirmPassword)) {
-                    JOptionPane.showMessageDialog(whitePanel, "New password and confirm password do not match.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
                 
-
                 User user = new User();
                 user.setId(doctor.getUser().getId());
                 user.setEmail(doctor.getUser().getEmail());
                 user.setPassword(newPassword);
                 user.setRole(role);
                 
-                send.updateInformation(user, doctor); 
+                send.updateInformation(user, doctor, confirmPassword); 
 
                 JOptionPane.showMessageDialog(whitePanel, "Password successfully updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 auxiliar();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(whitePanel, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }

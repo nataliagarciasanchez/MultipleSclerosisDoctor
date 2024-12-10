@@ -153,11 +153,13 @@ public class DoctorServerCommunication {
          *
          * @param user
          * @param doctor
+         * @param confirmPassword
          */
-        public void updateInformation(User user, Doctor doctor) {
+        public void updateInformation(User user, Doctor doctor, String confirmPassword) {
 
             try {
                 Utilities.validateUpdateDoctor(doctor);
+                
                 out.writeObject("updateInformation");
                 System.out.println("Sending update request to the server...");
                 
@@ -165,9 +167,9 @@ public class DoctorServerCommunication {
                 String newHashedPassword = PasswordEncryption.hashPassword(user.getPassword());
                 String existingHashedPassword = doctor.getUser().getPassword();
 
-                // Actualizar la contraseña si es necesario
+                // update password if it has changed
                 if (!existingHashedPassword.equals(newHashedPassword) && !user.getPassword().equals(existingHashedPassword)) {
-                    Utilities.validateUpdatePassword(user);
+                    Utilities.validateUpdatePassword(user.getPassword(), confirmPassword);
                     System.out.println("Updating password...");
                     user.setPassword(newHashedPassword);
                     out.writeObject(user);
@@ -180,7 +182,7 @@ public class DoctorServerCommunication {
                 
                 String response = (String) in.readObject();
                 System.out.println("Server response: " + response);
-                //System.out.println(in.readObject());
+                
                 
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
