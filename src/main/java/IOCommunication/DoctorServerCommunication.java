@@ -36,24 +36,38 @@ public class DoctorServerCommunication {
         this.serverPort=serverPort;
     }
     
-    public void start(){
-        
+    public boolean start(){
+        boolean connection = false;
         try {
             this.socket = new Socket(serverAddress, serverPort);
             this.out = new ObjectOutputStream(socket.getOutputStream());
             out.flush();
             this.in = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Doctor connected to server");
+            
+            
             String message = "DoctorServerCommunication";
             out.writeObject(message);
+            out.flush();
             
-        } catch (IOException ex) {
+            Boolean serverResponse = (Boolean) in.readObject();
+            System.out.println("boolean: " + serverResponse);
+            if (!serverResponse) {
+                connection = false;
+                releaseResources(in, out, socket);
+                //System.exit(0);
+                
+            }else{
+            connection = true;
+            }
+            
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(DoctorServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, 
             "Connection to the server was lost. Please try again later.",
             "Connection Error", JOptionPane.ERROR_MESSAGE);
         System.exit(0);
         }
+        return connection;
     }
     
     public class Send {
@@ -273,7 +287,11 @@ public class DoctorServerCommunication {
             }
         }
         
-        private static void releaseResources(ObjectInputStream in, ObjectOutputStream out, Socket socket) {
+        
+        
+    }
+    
+    private static void releaseResources(ObjectInputStream in, ObjectOutputStream out, Socket socket) {
             try {
                 in.close();
                 out.close();
@@ -282,10 +300,6 @@ public class DoctorServerCommunication {
                 e.printStackTrace();
             }
         }
-        
-    }
-    
-    
 
     
 }
