@@ -24,25 +24,23 @@ import java.sql.Date;
  */
 
 public class PanelPrincipal extends JPanel {
-    private JPanel dynamicPanel; // Panel for dynamic content
-    private final Image backgroundImage; // Background image
+    private JPanel dynamicPanel; 
+    private final Image backgroundImage; 
     private final DoctorServerCommunication.Send send;
     private Role role;
 
     public PanelPrincipal(DoctorServerCommunication.Send send) {
         this.send = send;
         this.role = new Role();
-
-        // Load background image
+        
         backgroundImage = new ImageIcon(getClass().getResource("/images/Fondo.jpg")).getImage();
 
         setLayout(new BorderLayout());
 
-        // Title Panel
         JPanel titlePanel = new JPanel();
-        titlePanel.setOpaque(false); // Transparent background
+        titlePanel.setOpaque(false); 
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-        titlePanel.add(Box.createRigidArea(new Dimension(0, 100))); // Spacer from the top
+        titlePanel.add(Box.createRigidArea(new Dimension(0, 100))); 
 
         JLabel titleLabel = new JLabel("Multiple Sclerosis Monitoring");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 52));
@@ -50,28 +48,26 @@ public class PanelPrincipal extends JPanel {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         titlePanel.add(titleLabel);
-        titlePanel.add(Box.createRigidArea(new Dimension(0, 40))); // Spacer below the title
+        titlePanel.add(Box.createRigidArea(new Dimension(0, 40))); 
 
-        // Dynamic Panel for question and buttons
         dynamicPanel = new JPanel();
-        dynamicPanel.setOpaque(false); // Transparent background
+        dynamicPanel.setOpaque(false); 
         dynamicPanel.setLayout(new BoxLayout(dynamicPanel, BoxLayout.Y_AXIS));
 
         showDefaultContent();
 
-        add(titlePanel, BorderLayout.NORTH); // Add title panel
-        add(dynamicPanel, BorderLayout.CENTER); // Add dynamic panel
+        add(titlePanel, BorderLayout.NORTH); 
+        add(dynamicPanel, BorderLayout.CENTER); 
     }
 
     private void showDefaultContent() {
-        dynamicPanel.removeAll(); // Clear existing content
+        dynamicPanel.removeAll(); 
 
         JLabel questionLabel = new JLabel("What do you want to do?");
         questionLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
         questionLabel.setForeground(Color.WHITE);
         questionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Buttons for Sign Up and Log In
         JButton signUpButton = new JButton("Sign Up");
         JButton logInButton = new JButton("Log In");
 
@@ -83,10 +79,9 @@ public class PanelPrincipal extends JPanel {
         buttonPanel.add(signUpButton);
         buttonPanel.add(logInButton);
 
-        // Add components to the dynamic panel
-        dynamicPanel.add(Box.createRigidArea(new Dimension(0, 150))); // Spacer to lower everything
+        dynamicPanel.add(Box.createRigidArea(new Dimension(0, 150))); 
         dynamicPanel.add(questionLabel);
-        dynamicPanel.add(Box.createRigidArea(new Dimension(0, 40))); // Spacer
+        dynamicPanel.add(Box.createRigidArea(new Dimension(0, 40))); 
         dynamicPanel.add(buttonPanel);
 
         dynamicPanel.revalidate();
@@ -121,15 +116,14 @@ public class PanelPrincipal extends JPanel {
 
                 Doctor doctor = null;
                 while (doctor == null) {
-                    doctor = send.login(username, password); // Communicate with server  
+                    doctor = send.login(username, password); 
                     
                     if (doctor != null) {
                         JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-                        // Proceed to the next panel with doctor details
                         JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
                         mainFrame.getContentPane().removeAll();
-                        mainFrame.add(new SecondPanel(doctor, send)); // Pass doctor details to the next panel
+                        mainFrame.add(new SecondPanel(doctor, send)); 
                         mainFrame.revalidate();
                         mainFrame.repaint();
                         break;
@@ -174,21 +168,25 @@ public class PanelPrincipal extends JPanel {
         nameField.setPreferredSize(new Dimension(350, 40));
         nameField.setMaximumSize(new Dimension(350, 40));
         JPanel namePanel = createAlignedRow("Name:", nameField);
+        nameField.setToolTipText("Enter your full first name. Example: John");
 
         JTextField surnameField = new JTextField();
         surnameField.setPreferredSize(new Dimension(350, 40));
         surnameField.setMaximumSize(new Dimension(350, 40));
         JPanel surnamePanel = createAlignedRow("Surname:", surnameField);
+        surnameField.setToolTipText("Enter your last name. Example: Doe");
 
         JTextField usernameField = new JTextField();
         usernameField.setPreferredSize(new Dimension(350, 40));
         usernameField.setMaximumSize(new Dimension(350, 40));
         JPanel usernamePanel = createAlignedRow("Username:", usernameField);
+        usernameField.setToolTipText("Enter a unique username. Example: johndoe@gmail.com");
 
         JPasswordField passwordField = new JPasswordField();
         passwordField.setPreferredSize(new Dimension(350, 40));
         passwordField.setMaximumSize(new Dimension(350, 40));
         JPanel passwordPanel = createAlignedRow("Password:", passwordField);
+        passwordField.setToolTipText("Enter a strong password with at least 8 characters, including uppercase, lowercase, and a number.");
         
         JButton cancelButton = new JButton("Cancel");
         JButton okButton = new JButton("OK");
