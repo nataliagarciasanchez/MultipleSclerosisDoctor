@@ -824,7 +824,8 @@ public class SecondPanel extends JPanel {
                 doctor.setSurname(surnameField.getText());
                 User user = doctor.getUser();
                 user.setRole(role);
-                send.updateInformation(user, doctor);
+                String samePassword = user.getPassword();
+                send.updateInformation(user, doctor, samePassword);
 
                 JOptionPane.showMessageDialog(this, "Patient information updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IllegalArgumentException ex) {
@@ -911,28 +912,20 @@ public class SecondPanel extends JPanel {
             String newPassword = new String(newPasswordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
             try {
-                if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
-                    JOptionPane.showMessageDialog(whitePanel, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (!newPassword.equals(confirmPassword)) {
-                    JOptionPane.showMessageDialog(whitePanel, "New password and confirm password do not match.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
                 
-
                 User user = new User();
                 user.setId(doctor.getUser().getId());
                 user.setEmail(doctor.getUser().getEmail());
                 user.setPassword(newPassword);
                 user.setRole(role);
                 
-                send.updateInformation(user, doctor); 
+                send.updateInformation(user, doctor, confirmPassword); 
 
                 JOptionPane.showMessageDialog(whitePanel, "Password successfully updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 auxiliar();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(whitePanel, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }

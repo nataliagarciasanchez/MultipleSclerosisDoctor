@@ -261,9 +261,15 @@ public class Utilities {
     }
     
     
-    public static void validateUpdatePassword(User user) throws IllegalArgumentException {
+    public static void validateUpdatePassword(String newPassword, String confirmPassword) throws IllegalArgumentException {
         
-        if (!isValidPassword(user.getPassword())) {
+        if (newPassword.isEmpty() || confirmPassword.isEmpty()){
+            throw new IllegalArgumentException("Password fields cannot be empty.");
+        }
+        if (!newPassword.equals(confirmPassword)){
+            throw new IllegalArgumentException("New password and confirm password do not match.");
+        }
+        if (!isValidPassword(newPassword)) {
             throw new IllegalArgumentException("Invalid password.\nIt must be at least 8 characters long, contain at least one uppercase letter, and include at least one number.");
         }
         
