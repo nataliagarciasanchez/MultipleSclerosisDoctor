@@ -816,15 +816,15 @@ public class SecondPanel extends JPanel {
 
         saveButton.addActionListener(e -> {
             // Validar los campos obligatorios del doctor
-            if (doctor.getName() == null || doctor.getName().trim().isEmpty()) {
-                throw new IllegalArgumentException("Doctor's name cannot be empty.");
+            if (nameField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(whitePanel, "Name field cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // salir antes de enviar datos al servidor}
             }
-            if (doctor.getSpecialty() == null || doctor.getSpecialty().trim().isEmpty()) {
-                throw new IllegalArgumentException("Doctor's specialty cannot be empty.");
+            if (surnameField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(whitePanel, "Surname field cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // salir antes de enviar datos al servidor}
             }
-            if (doctor.getUser() == null || doctor.getUser().getEmail() == null || doctor.getUser().getEmail().trim().isEmpty()) {
-                throw new IllegalArgumentException("Doctor's email cannot be empty.");
-            }
+            
             try {
                 doctor.setName(nameField.getText());
                 doctor.setSurname(surnameField.getText());
