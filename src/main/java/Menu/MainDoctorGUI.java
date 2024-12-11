@@ -61,9 +61,7 @@ public class MainDoctorGUI {
                 "Access Denied", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
-            
-            System.out.println("before send and receive");
-                send = doctorServerCom.new Send();
+            send = doctorServerCom.new Send();
                 
                 if (send == null) {
                     JOptionPane.showMessageDialog(null, "Error initializing communication channels. Please restart the application.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -71,12 +69,11 @@ public class MainDoctorGUI {
                 }else{
 
             
-                    System.out.println("reached here");
+                    
             JOptionPane.showMessageDialog(null, "Connected to the server successfully!", "Connection Status", JOptionPane.INFORMATION_MESSAGE);
 
             // Iniciar la interfaz gráfica
             SwingUtilities.invokeLater(() -> {
-                System.out.println("swing initializes");
                 FramePrincipal mainFrame = new FramePrincipal(send);
                 mainFrame.setVisible(true);
             });

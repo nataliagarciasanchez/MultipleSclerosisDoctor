@@ -50,7 +50,7 @@ public class DoctorServerCommunication {
             out.flush();
             
             Boolean serverResponse = (Boolean) in.readObject();
-            System.out.println("boolean: " + serverResponse);
+            
             if (!serverResponse) {
                 connection = false;
                 releaseResources(in, out, socket);
