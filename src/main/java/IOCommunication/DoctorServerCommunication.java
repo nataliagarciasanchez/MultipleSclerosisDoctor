@@ -124,9 +124,8 @@ public class DoctorServerCommunication {
                 out.writeObject("login"); // Acción de inicio de sesión
                 out.writeObject(username);
                 
-                System.out.println("Plain: " + password);
                 password = PasswordEncryption.hashPassword(password); // encriptamos
-                System.out.println("Hashed: "+ password);
+                
                 out.writeObject(password);
                 
                 System.out.println("Logging in.....");
@@ -183,13 +182,12 @@ public class DoctorServerCommunication {
 
                 // update password if it has changed
                 if (!existingHashedPassword.equals(newHashedPassword) && !user.getPassword().equals(existingHashedPassword)) {
-                    Utilities.validateUpdatePassword(user.getPassword(), confirmPassword);
                     System.out.println("Updating password...");
                     user.setPassword(newHashedPassword);
                     out.writeObject(user);
                 }else{
-                    System.out.println("Patient.getUser(): " + doctor.getUser().getPassword());
-                    out.writeObject(doctor.getUser());}
+                    out.writeObject(doctor.getUser());
+                }
                 
                 
                 out.writeObject(doctor);

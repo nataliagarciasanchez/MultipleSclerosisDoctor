@@ -7,6 +7,7 @@ package Menu;
 import IOCommunication.DoctorServerCommunication;
 import static IOCommunication.DoctorServerCommunicationTest.role;
 import Menu.Utilities.Utilities;
+import static Menu.Utilities.Utilities.isValidPassword;
 import POJOs.Bitalino;
 import POJOs.Doctor;
 import POJOs.Feedback;
@@ -907,6 +908,21 @@ public class SecondPanel extends JPanel {
 
             String newPassword = new String(newPasswordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
+            
+            if (newPassword.trim().isEmpty()|| confirmPassword.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(whitePanel, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // salir antes de enviar datos al servidor
+            }
+            if (!newPassword.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(whitePanel, "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // salir antes de enviar datos al servidor
+            }
+            if (!isValidPassword(newPassword)) {
+            JOptionPane.showMessageDialog(whitePanel, "Invalid password.\nIt must be at least 8 characters long, contain at least one uppercase letter, and include at least one number.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // salir antes de enviar datos al servidor
+            }
+
+            
             try {
                 
                 User user = new User();
