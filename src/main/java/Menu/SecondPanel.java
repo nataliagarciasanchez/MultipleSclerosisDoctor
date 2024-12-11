@@ -38,10 +38,10 @@ import javax.swing.event.DocumentListener;
  */
 public class SecondPanel extends JPanel {
 
-    private JPanel whitePanel; 
+    private JPanel whitePanel;
     private JLabel titleLabel;
     private Doctor doctor;
-    private final Image backgroundImage; 
+    private final Image backgroundImage;
     private final DoctorServerCommunication.Send send;
     private LocalDate date = LocalDate.now();
     public static String macAddress = "98:D3:41:FD:4E:E8";
@@ -489,12 +489,12 @@ public class SecondPanel extends JPanel {
 
         contentPanel.add(createInfoLine("3. EMG: ", ProcessReport.analyzeSignalsReport(report, report.getPatient(), report.getBitalinos().get(0))));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        
+
         JButton downloadSignalsButton = new JButton("View Signal Values");
         downloadSignalsButton.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         downloadSignalsButton.setBackground(Color.WHITE);
         downloadSignalsButton.setForeground(Color.BLACK);
-        
+
         downloadSignalsButton.addActionListener(e -> {
             downloadSignalsButton.setEnabled(false);
             new SwingWorker<Void, Void>() {
@@ -815,6 +815,16 @@ public class SecondPanel extends JPanel {
         cancelButton.setFocusPainted(false);
 
         saveButton.addActionListener(e -> {
+            // Validar los campos obligatorios del doctor
+            if (doctor.getName() == null || doctor.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Doctor's name cannot be empty.");
+            }
+            if (doctor.getSpecialty() == null || doctor.getSpecialty().trim().isEmpty()) {
+                throw new IllegalArgumentException("Doctor's specialty cannot be empty.");
+            }
+            if (doctor.getUser() == null || doctor.getUser().getEmail() == null || doctor.getUser().getEmail().trim().isEmpty()) {
+                throw new IllegalArgumentException("Doctor's email cannot be empty.");
+            }
             try {
                 doctor.setName(nameField.getText());
                 doctor.setSurname(surnameField.getText());
@@ -829,8 +839,6 @@ public class SecondPanel extends JPanel {
                 return;
             }
 
-            
-            
         });
 
         cancelButton.addActionListener(e -> auxiliar());
@@ -908,8 +916,8 @@ public class SecondPanel extends JPanel {
 
             String newPassword = new String(newPasswordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
-            
-            if (newPassword.trim().isEmpty()|| confirmPassword.trim().isEmpty()) {
+
+            if (newPassword.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(whitePanel, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                 return; // salir antes de enviar datos al servidor
             }
@@ -918,20 +926,19 @@ public class SecondPanel extends JPanel {
                 return; // salir antes de enviar datos al servidor
             }
             if (!isValidPassword(newPassword)) {
-            JOptionPane.showMessageDialog(whitePanel, "Invalid password.\nIt must be at least 8 characters long, contain at least one uppercase letter, and include at least one number.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(whitePanel, "Invalid password.\nIt must be at least 8 characters long, contain at least one uppercase letter, and include at least one number.", "Error", JOptionPane.ERROR_MESSAGE);
                 return; // salir antes de enviar datos al servidor
             }
 
-            
             try {
-                
+
                 User user = new User();
                 user.setId(doctor.getUser().getId());
                 user.setEmail(doctor.getUser().getEmail());
                 user.setPassword(newPassword);
                 user.setRole(role);
-                
-                send.updateInformation(user, doctor, confirmPassword); 
+
+                send.updateInformation(user, doctor, confirmPassword);
 
                 JOptionPane.showMessageDialog(whitePanel, "Password successfully updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 auxiliar();

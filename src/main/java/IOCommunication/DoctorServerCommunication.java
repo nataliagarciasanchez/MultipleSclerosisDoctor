@@ -171,7 +171,7 @@ public class DoctorServerCommunication {
         public void updateInformation(User user, Doctor doctor, String confirmPassword) {
 
             try {
-                Utilities.validateUpdateDoctor(doctor);
+                //Utilities.validateUpdateDoctor(doctor);
                 
                 out.writeObject("updateInformation");
                 System.out.println("Sending update request to the server...");
